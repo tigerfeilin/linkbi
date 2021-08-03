@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.linkbi.datax.api.mapper.DataViewChartMapper">
+    <resultMap id="DataViewChart" type="com.linkbi.datax.api.domain.DataViewChart" >
+        <result column="id" property="id" />
+        <result column="mode_id" property="modeId" />
+        <result column="name" property="name" />
+        <result column="comment" property="comment" />
+        <result column="content" property="content" />
+        <result column="is_private" property="isPrivate" />
+        <result column="status" property="status" />
+        <result column="update_user" property="updateUser" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+    <sql id="Base_Column_List">
+		t.id,
+		t.mode_id,
+		t.name,
+		t.comment,
+		t.content,
+		t.is_private,
+		t.status,
+		t.update_user,
+		t.update_time
+	</sql>
+    <select id="pageChartList" resultMap="DataViewChart">
+        SELECT <include refid="Base_Column_List" />
+        FROM dataview_chart AS t
+        <trim prefix="WHERE" prefixOverrides="AND | OR" >
+            <if test="modeId != null">
+                AND t.mode_id = #{modeId}
+            </if>
+            <if test="sourceId != null">
+                AND t.content = like concat('%', #{sourceId}, '%')
+            </if>
+            <if test="name != null and name != ''">
+                AND t.name like concat('%', #{name}, '%')
+            </if>
+            <if test="isPrivate != null and isPrivate != ''" >
+                AND t.is_private = #{isPrivate}
+            </if>
+            <if test="usrId != null" >
+                AND t.update_user = #{usrId}
+            </if>
+        </trim>
+        ORDER BY t.id DESC
+        LIMIT #{pagesize} offset #{offset}
+    </select>
+
+    <select id="pageChartListCount" resultType="int">
+        SELECT count(1)
+        FROM dataview_chart AS t
+        <trim prefix="WHERE" prefixOverrides="AND | OR" >
+            <if test="modeId != null">
+                AND t.mode_id = #{modeId}
+            </if>
+            <if test="sourceId != null">
+                AND t.content = like concat('%', #{sourceId}, '%')
+            </if>
+            <if test="name != null and name != ''">
+                AND t.chart_name like concat('%', #{name}, '%')
+            </if>
+            <if test="isPrivate != null and isPrivate != ''" >
+                AND t.is_private = #{isPrivate}
+            </if>
+            <if test="usrId != null" >
+                AND t.update_user = #{usrId}
+            </if>
+        </trim>
+    </select>
+</mapper>

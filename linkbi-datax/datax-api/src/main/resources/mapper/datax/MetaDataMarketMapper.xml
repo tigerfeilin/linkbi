@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.linkbi.datax.api.mapper.MetaDataMarketMapper">
+    <resultMap id="MetaDataMarket" type="com.linkbi.datax.api.domain.MetaDataMarket" >
+        <result column="id" property="id" />
+        <result column="datasource_id" property="datasourceId" />
+        <result column="schema_name" property="schemaName" />
+        <result column="mode_name" property="modeName" />
+        <result column="mode_type" property="modeType" />
+        <result column="query_type" property="queryType" />
+        <result column="query_sql" property="querySql" />
+        <result column="view_type" property="viewType" />
+        <result column="permission" property="permission" />
+        <result column="update_user" property="updateUser" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+    <sql id="Base_Column_List">
+		t.id,
+		t.datasource_id,
+		t.schema_name,
+		t.mode_name,
+		t.mode_type,
+		t.query_type,
+		t.query_sql,
+		t.view_type,
+		t.permission,
+		t.update_user,
+		t.update_time
+	</sql>
+    <select id="pageMarketList" resultMap="MetaDataMarket">
+        SELECT <include refid="Base_Column_List" />
+        FROM metadata_data_market AS t
+        <trim prefix="WHERE" prefixOverrides="AND | OR" >
+            <if test="datasourceId != null">
+                AND t.datasource_id = #{datasourceId}
+            </if>
+            <if test="modeName != null and modeName != ''">
+                AND t.mode_name like concat('%', #{modeName}, '%')
+            </if>
+            <if test="modeType != null and modeType != ''" >
+                AND t.mode_type = #{modeType}
+            </if>
+        </trim>
+        ORDER BY t.id DESC
+        LIMIT #{pagesize} offset #{offset}
+    </select>
+
+    <select id="pageMarketListCount" resultType="int">
+        SELECT count(1)
+        FROM metadata_data_market AS t
+        <trim prefix="WHERE" prefixOverrides="AND | OR" >
+            <if test="datasourceId != null">
+                AND t.datasource_id = #{datasourceId}
+            </if>
+            <if test="modeName != null and modeName != ''">
+                AND t.mode_name like concat('%', #{modeName}, '%')
+            </if>
+            <if test="modeType != null and modeType != ''" >
+                AND t.mode_type = #{modeType}
+            </if>
+        </trim>
+    </select>
+    <select id="listMarketBySql" resultType="int">
+        SELECT count(1)
+        FROM metadata_data_market AS t
+        <trim prefix="WHERE" prefixOverrides="AND | OR" >
+            <if test="sqlQuery != null and sqlQuery != ''">
+                AND t.query_sql = #{sqlQuery}
+            </if>
+        </trim>
+    </select>
+    <select id="listMarketAll" resultMap="MetaDataMarket">
+        SELECT <include refid="Base_Column_List" />
+        FROM metadata_data_market AS t
+        <trim prefix="WHERE" prefixOverrides="AND | OR" >
+            <if test="datasourceId != null">
+                AND t.datasource_id = #{datasourceId}
+            </if>
+            <if test="modeName != null and modeName != ''">
+                AND t.mode_name like concat('%', #{modeName}, '%')
+            </if>
+            <if test="modeType != null and modeType != ''" >
+                AND t.mode_type = #{modeType}
+            </if>
+        </trim>
+        ORDER BY t.id DESC
+    </select>
+
+    <select id="listMarketByUser" resultMap="MetaDataMarket">
+        SELECT <include refid="Base_Column_List" />
+        FROM metadata_data_market AS t
+        <trim prefix="WHERE" prefixOverrides="AND | OR" >
+            <if test="userId != null">
+                AND t.update_user = #{userId}
+            </if>
+        </trim>
+        ORDER BY t.id DESC
+    </select>
+    <select id="pageSubcribeList" resultMap="MetaDataMarket">
+        SELECT <include refid="Base_Column_List" />
+        FROM metadata_data_market AS t right join
+        (
+        SELECT mode_id from metadata_data_subcribe AS mum
+        <trim prefix="WHERE" prefixOverrides="AND | OR" >
+            <if test="userId != null">
+                AND mum.user_id = #{userId}
+            </if>
+        </trim>
+        )
+        ut on t.id = ut.mode_id
+        <trim prefix="WHERE" prefixOverrides="AND | OR" >
+            <if test="datasourceId != null">
+                AND t.datasource_id = #{datasourceId}
+            </if>
+            <if test="modeName != null and modeName != ''">
+                AND t.mode_name like concat('%', #{modeName}, '%')
+            </if>
+            <if test="modeType != null and modeType != ''" >
+                AND t.mode_type = #{modeType}
+            </if>
+        </trim>
+        ORDER BY t.id DESC
+        LIMIT #{pagesize} offset #{offset}
+    </select>
+
+    <select id="pageSubcribeListCount" resultType="int">
+        SELECT count(1)
+        FROM metadata_data_market AS t right join
+        (
+        SELECT mode_id from metadata_data_subcribe AS mum
+        <trim prefix="WHERE" prefixOverrides="AND | OR" >
+            <if test="userId != null">
+                AND mum.user_id = #{userId}
+            </if>
+        </trim>
+        )
+        ut on t.id = ut.mode_id
+        <trim prefix="WHERE" prefixOverrides="AND | OR" >
+            <if test="datasourceId != null">
+                AND t.datasource_id = #{datasourceId}
+            </if>
+            <if test="modeName != null and modeName != ''">
+                AND t.mode_name like concat('%', #{modeName}, '%')
+            </if>
+            <if test="modeType != null and modeType != ''" >
+                AND t.mode_type = #{modeType}
+            </if>
+        </trim>
+    </select>
+
+    <select id="listSubcribeById" resultType="int">
+        select count(1) from metadata_data_subcribe
+        where user_id=#{userId} and mode_id=#{modeId}
+    </select>
+
+    <insert id="insertSubcribe">
+        insert into metadata_data_subcribe
+        (user_id,mode_id)
+        VALUES
+        (#{userId},#{modeId})
+    </insert>
+    <delete id="deleteSubcribe">
+        delete from metadata_data_subcribe
+        where user_id=#{userId} and mode_id=#{modeId}
+    </delete>
+    <delete id="deleteSubcribeByModeId">
+        delete from metadata_data_subcribe
+        where mode_id=#{modeId}
+    </delete>
+    <!--<update id="update" >
+        UPDATE metadata_table
+		SET
+			table_name = #{tableName},
+			table_ch_name = #{tableChName},
+			table_comment = #{tableComment},
+			table_type = #{tableType},
+			table_cycle = #{tableCycle},
+			table_status = #{tableStatus},
+			table_permission = #{tablePermission},
+			column_json = #{columnJson},
+			update_user = #{updateUser},
+			update_time = now()
+		WHERE id = #{id}
+    </update>-->
+</mapper>

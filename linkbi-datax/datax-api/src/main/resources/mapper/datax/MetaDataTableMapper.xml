@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.linkbi.datax.api.mapper.MetaDataTableMapper">
+    <resultMap id="MetaDataTable" type="com.linkbi.datax.api.domain.MetaDataTable" >
+        <result column="id" property="id" />
+        <result column="datasource_id" property="datasourceId" />
+        <result column="datasource_name" property="datasourceName" />
+        <result column="database_name" property="databaseName" />
+        <result column="table_name" property="tableName" />
+        <result column="table_ch_name" property="tableChName" />
+        <result column="table_comment" property="tableComment" />
+        <result column="table_type" property="tableType" />
+        <result column="table_cycle" property="tableCycle" />
+        <result column="table_status" property="tableStatus" />
+        <result column="table_permission" property="tablePermission" />
+        <result column="column_json" property="columnJson" />
+        <result column="update_user" property="updateUser" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+    <sql id="Base_Column_List">
+		t.id,
+		t.datasource_id,
+		t.datasource_name,
+		t.database_name,
+		t.table_name,
+		t.table_ch_name,
+		t.table_comment,
+		t.table_type,
+		t.table_cycle,
+		t.table_status,
+		t.table_permission,
+		t.column_json,
+		t.update_user,
+		t.update_time
+	</sql>
+    <select id="pageList" resultMap="MetaDataTable">
+        SELECT <include refid="Base_Column_List" />
+        FROM metadata_table AS t
+        <trim prefix="WHERE" prefixOverrides="AND | OR" >
+            <if test="datasourceId != null">
+                AND t.datasource_id = #{datasourceId}
+            </if>
+            <if test="tableName != null and tableName != ''">
+                AND t.table_name like concat('%', #{tableName}, '%')
+            </if>
+            <if test="tableType != null and tableType != ''" >
+                AND t.table_type = #{tableType}
+            </if>
+        </trim>
+        ORDER BY t.id DESC
+        LIMIT #{pagesize} offset #{offset}
+    </select>
+
+    <select id="pageListCount" resultType="int">
+        SELECT count(1)
+        FROM metadata_table AS t
+        <trim prefix="WHERE" prefixOverrides="AND | OR" >
+            <if test="datasourceId != null">
+                AND t.datasource_id = #{datasourceId}
+            </if>
+            <if test="tableName != null and tableName != ''">
+                AND t.table_name like concat('%', #{tableName}, '%')
+            </if>
+            <if test="tableType != null and tableType != ''" >
+                AND t.table_type = #{tableType}
+            </if>
+        </trim>
+    </select>
+
+    <select id="listAll" resultMap="MetaDataTable">
+        SELECT <include refid="Base_Column_List" />
+        FROM metadata_table AS t
+        <trim prefix="WHERE" prefixOverrides="AND | OR" >
+            <if test="datasourceId != null">
+                AND t.datasource_id = #{datasourceId}
+            </if>
+            <if test="tableSchema != null and tableSchema != ''">
+                AND t.database_name like concat('%', #{tableSchema}, '%')
+            </if>
+            <if test="tableName != null and tableName != ''">
+                AND t.table_name like concat('%', #{tableName}, '%')
+            </if>
+            <if test="tableType != null and tableType != ''" >
+                AND t.table_type = #{tableName}
+            </if>
+        </trim>
+        ORDER BY t.id DESC
+    </select>
+
+    <!--<update id="update" >
+        UPDATE metadata_table
+		SET
+			table_name = #{tableName},
+			table_ch_name = #{tableChName},
+			table_comment = #{tableComment},
+			table_type = #{tableType},
+			table_cycle = #{tableCycle},
+			table_status = #{tableStatus},
+			table_permission = #{tablePermission},
+			column_json = #{columnJson},
+			update_user = #{updateUser},
+			update_time = now()
+		WHERE id = #{id}
+    </update>-->
+</mapper>

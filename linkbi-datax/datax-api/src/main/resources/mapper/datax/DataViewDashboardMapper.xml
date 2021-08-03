@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.linkbi.datax.api.mapper.DataViewDashboardMapper">
+    <resultMap id="DataViewDashboard" type="com.linkbi.datax.api.domain.DataViewDashboard" >
+        <result column="id" property="id" />
+        <result column="name" property="name" />
+        <result column="comment" property="comment" />
+        <result column="content" property="content" />
+        <result column="is_private" property="isPrivate" />
+        <result column="status" property="status" />
+        <result column="update_user" property="updateUser" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+    <sql id="Base_Column_List">
+		t.id,
+		t.name,
+		t.comment,
+		t.content,
+		t.is_private,
+		t.status,
+		t.update_user,
+		t.update_time
+	</sql>
+    <select id="pageDashboardList" resultMap="DataViewDashboard">
+        SELECT <include refid="Base_Column_List" />
+        FROM dataview_dashboard AS t
+        <trim prefix="WHERE" prefixOverrides="AND | OR" >
+            <if test="name != null and name != ''">
+                AND t.name like concat('%', #{name}, '%')
+            </if>
+            <if test="isPrivate != null and isPrivate != ''" >
+                AND t.is_private = #{isPrivate}
+            </if>
+            <if test="usrId != null" >
+                AND t.update_user = #{usrId}
+            </if>
+        </trim>
+        ORDER BY t.id DESC
+        LIMIT #{pagesize} offset #{offset}
+    </select>
+    <select id="getDashboardById" resultMap="DataViewDashboard">
+        SELECT <include refid="Base_Column_List" />
+        FROM dataview_dashboard AS t
+        <trim prefix="WHERE" prefixOverrides="AND | OR" >
+            <if test="id != null and id != ''">
+                AND t.id = #{id}
+            </if>
+        </trim>
+    </select>
+
+    <select id="pageDashboardListCount" resultType="int">
+        SELECT count(1)
+        FROM dataview_dashboard AS t
+        <trim prefix="WHERE" prefixOverrides="AND | OR" >
+            <if test="name != null and name != ''">
+                AND t.name like concat('%', #{name}, '%')
+            </if>
+            <if test="isPrivate != null and isPrivate != ''" >
+                AND t.is_private = #{isPrivate}
+            </if>
+            <if test="usrId != null" >
+                AND t.update_user = #{usrId}
+            </if>
+        </trim>
+    </select>
+</mapper>
