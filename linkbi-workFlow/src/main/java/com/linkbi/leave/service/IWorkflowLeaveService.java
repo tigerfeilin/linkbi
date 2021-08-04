@@ -2,7 +2,6 @@ package com.linkbi.leave.service;
 
 import java.util.List;
 
-import com.linkbi.activiti.domain.dto.HistoryDataDTO;
 import com.linkbi.leave.domain.WorkflowLeave;
 
 /**

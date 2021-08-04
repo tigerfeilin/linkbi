@@ -8,7 +8,6 @@ import java.util.stream.Collectors;
 import com.linkbi.common.utils.DateUtils;
 import com.linkbi.common.utils.SecurityUtils;
 import com.linkbi.common.utils.StringUtils;
-import com.linkbi.common.utils.uuid.IdUtils;
 import com.linkbi.common.utils.uuid.UUID;
 import com.linkbi.system.service.ISysUserService;
 import org.activiti.api.process.model.ProcessInstance;
