@@ -10,7 +10,7 @@ import com.linkbi.common.utils.ServletUtils;
 import com.linkbi.common.utils.StringUtils;
 
 /**
- * linkbi首创 自定义权限实现，ss取自SpringSecurity首字母
+ *  自定义权限实现，ss取自SpringSecurity首字母
  * 
  * @author
  */
