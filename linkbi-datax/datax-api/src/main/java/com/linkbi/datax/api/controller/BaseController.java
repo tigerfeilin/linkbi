@@ -3,12 +3,8 @@ package com.linkbi.datax.api.controller;
 
 import com.baomidou.mybatisplus.extension.api.ApiController;
 import com.linkbi.common.utils.SecurityUtils;
-import com.linkbi.datax.api.util.JwtTokenUtils;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Enumeration;
-
-import static com.linkbi.datatx.core.util.Constants.STRING_BLANK;
 
 /**
  * base controller
