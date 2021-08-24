@@ -127,6 +127,7 @@ server:
         max-threads: 800
         # Tomcat启动初始化的线程数，默认值25
         min-spare-threads: 30
+    max-http-header-size: 4048576
 #华为OBS存储
 huawei:
     enabled: false
