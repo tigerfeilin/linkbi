@@ -495,6 +495,7 @@ export default {
         { value: 'HH:mm:ss', label: 'HH:mm:ss' },
         { value: 'yyyy/MM/dd HH:mm:ss', label: 'yyyy/MM/dd HH:mm:ss' },
         { value: 'yyyy-MM-dd HH:mm:ss', label: 'yyyy-MM-dd HH:mm:ss' },
+        { value: 'yyyyMMddHHmm', label: 'yyyyMMddHHmm' },
         { value: 'Timestamp', label: '时间戳' }
       ],
       statusList: [
