@@ -172,7 +172,8 @@ export const constantRoutes = [
 ]
 
 export default new Router({
-  mode: 'history', // 去掉url中的#
+  //mode: 'history', // 去掉url中的#
   scrollBehavior: () => ({ y: 0 }),
+  base: '/admp/',
   routes: constantRoutes
 })

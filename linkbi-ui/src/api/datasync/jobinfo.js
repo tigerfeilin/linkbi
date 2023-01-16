@@ -32,6 +32,25 @@ export function stopJob(id) {
   })
 }
 
+export function batchOnlineJob(ids) {
+  return request({
+    url: '/api/job/batchstart?ids=' + ids,
+    method: 'post'
+  })
+}
+
+export function batchOfflineJob(ids) {
+  return request({
+    url: '/api/job/batchstop?ids=' + ids,
+    method: 'post'
+  })
+}
+export function batchTriggerJob(ids) {
+  return request({
+    url: '/api/job/batchtrigger?ids=' + ids,
+    method: 'post'
+  })
+}
 export function getExecutorList() {
   return request({
     url: 'api/jobGroup/list',

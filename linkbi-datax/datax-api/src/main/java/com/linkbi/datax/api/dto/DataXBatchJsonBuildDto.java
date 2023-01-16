@@ -26,6 +26,10 @@ public class DataXBatchJsonBuildDto implements Serializable {
 
     private int templateId;
 
+    private String readerSchema;
+
+    private String writerSchema;
+
     private RdbmsReaderDto rdbmsReader;
 
     private RdbmsWriterDto rdbmsWriter;

@@ -106,6 +106,35 @@ public class JobInfoController extends BaseController{
         return ReturnT.SUCCESS;
     }
 
+    @RequestMapping(value = "/batchstop",method = RequestMethod.POST)
+    @ApiOperation("批量下线任务")
+    public ReturnT<String> batchstop(Long[] ids) {
+        //String[] jobList = ids.split(",");
+        for (Long jobId:ids) {
+            jobService.stop(jobId);
+        }
+        return ReturnT.SUCCESS;
+    }
+
+    @RequestMapping(value = "/batchstart",method = RequestMethod.POST)
+    @ApiOperation("批量上线任务")
+    public ReturnT<String> batchstart(Long[] ids) {
+        //String[] jobList = ids.split(",");
+        for (Long jobId:ids) {
+            jobService.start(jobId);
+        }
+        return ReturnT.SUCCESS;
+    }
+
+    @PostMapping(value = "/batchtrigger")
+    @ApiOperation("批量触发任务")
+    public ReturnT<String> batchtrigger(Long[] ids) {
+        // force cover job param
+        for (Long jobId:ids) {
+            JobTriggerPoolHelper.trigger(jobId, TriggerTypeEnum.MANUAL, -1, null, "");
+        }
+        return ReturnT.SUCCESS;
+    }
     @GetMapping("/nextTriggerTime")
     @ApiOperation("获取近5次触发时间")
     public ReturnT<List<String>> nextTriggerTime(String cron) {

@@ -12,7 +12,7 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item v-show="dataSource==='postgresql' || dataSource==='oracle' ||dataSource==='sqlserver' " label="Schema" prop="tableSchema">
+      <el-form-item v-show="dataSource==='postgresql' || dataSource==='greenplum' || dataSource==='oracle' ||dataSource==='sqlserver' " label="Schema" prop="tableSchema">
         <el-select v-model="listQuery.tableSchema" allow-create default-first-option filterable style="width: 300px" >
           <el-option
             v-for="item in schemaList"
@@ -173,7 +173,7 @@ export default {
                   this.rDsList.find((item) => {
                       if (item.id === e) {
                           this.dataSource = item.datasource
-                          if (this.dataSource === 'postgresql' || this.dataSource === 'oracle' || this.dataSource === 'sqlserver') {
+                          if (this.dataSource === 'postgresql' || dataSource==='greenplum' || this.dataSource === 'oracle' || this.dataSource === 'sqlserver') {
                               this.getSchema()
                           }
                       }
@@ -188,7 +188,7 @@ export default {
                   }
               })
           }
-          if (this.dataSource === 'postgresql' || this.dataSource === 'oracle' || this.dataSource === 'sqlserver') {
+          if (this.dataSource === 'postgresql' || dataSource==='greenplum' || this.dataSource === 'oracle' || this.dataSource === 'sqlserver') {
               this.getSchema()
           }
       },

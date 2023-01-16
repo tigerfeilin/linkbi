@@ -112,7 +112,8 @@ public class DataxJsonHelper implements DataxJsonInterface {
         } else if (SQL_SERVER.equals(datasource)) {
             readerPlugin = new SqlServerReader();
             buildReader = buildReader();
-        } else if (POSTGRESQL.equals(datasource)) {
+        } else if (POSTGRESQL.equals(datasource)
+                || GREENPLUM.equals(datasource)) {
             readerPlugin = new PostgresqlReader();
             buildReader = buildReader();
         } else if (CLICKHOUSE.equals(datasource)) {
@@ -144,6 +145,9 @@ public class DataxJsonHelper implements DataxJsonInterface {
         if (MYSQL.equals(datasource)) {
             writerPlugin = new MysqlWriter();
             buildWriter = this.buildWriter();
+        } else if (DORIS.equals(datasource)) {
+            writerPlugin = new DorisWriter();
+            buildWriter = this.buildWriter();
         } else if (ORACLE.equals(datasource)) {
             writerPlugin = new OraclelWriter();
             buildWriter = this.buildWriter();
@@ -152,6 +156,9 @@ public class DataxJsonHelper implements DataxJsonInterface {
             buildWriter = this.buildWriter();
         } else if (POSTGRESQL.equals(datasource)) {
             writerPlugin = new PostgresqllWriter();
+            buildWriter = this.buildWriter();
+        } else if (GREENPLUM.equals(datasource)) {
+            writerPlugin = new GreenplumlWriter();
             buildWriter = this.buildWriter();
         } else if (JdbcConstants.CLICKHOUSE.equals(datasource)) {
             writerPlugin = new ClickHouseWriter();
@@ -198,6 +205,7 @@ public class DataxJsonHelper implements DataxJsonInterface {
             case SQL_SERVER:
                 return String.format("[%s]", column);
             case POSTGRESQL:
+            case GREENPLUM:
             case ORACLE:
                 return String.format("\"%s\"", column);
             default:

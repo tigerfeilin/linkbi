@@ -50,7 +50,7 @@ public class DatabaseMongoDBImpl extends AbstractDatabase implements IDatabaseIn
 					getDataSource(jdbcSourceData);
 				}
 			}
-			LocalCacheUtil.set(jdbcSourceData.getDatasourceName(), mongoClient, 4 * 60 * 60 * 1000);
+			LocalCacheUtil.set(jdbcSourceData.getJdbcUrl(), mongoClient, 4 * 60 * 60 * 1000);
 		} catch (RuntimeException e) {
 			throw new RuntimeException(e);
 		}

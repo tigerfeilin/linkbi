@@ -113,6 +113,7 @@ public class SysDeptController extends BaseController
         {
             return AjaxResult.error("新增部门'" + dept.getDeptName() + "'失败，部门名称已存在");
         }
+        dept.setDelFlag("0");
         dept.setCreateBy(SecurityUtils.getUsername());
         return toAjax(deptService.insertDept(dept));
     }

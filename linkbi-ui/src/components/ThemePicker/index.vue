@@ -63,6 +63,7 @@ export default {
       if (!this.chalk) {
         const url = `https://unpkg.com/element-ui@${version}/lib/theme-chalk/index.css`
         await this.getCSSString(url, 'chalk')
+        //this['chalk'] = require('../../assets/styles/theme-chalk.css').replace(/@font-face{[^}]+}/, '')
       }
 
       const chalkHandler = getHandler('chalk', 'chalk-style')

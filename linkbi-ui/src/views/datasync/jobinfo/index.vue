@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-form :model="listQuery" ref="queryForm"  :inline="true">
+    <el-form :model="listQuery" ref="queryForm" v-show="showSearch" :inline="true">
       <el-form-item label="任务名称" prop="jobDesc">
         <el-input
           v-model="listQuery.jobDesc"
@@ -32,8 +32,43 @@
       <el-form-item>
         <el-button type="cyan"  icon="el-icon-search" size="mini" @click="fetchData">搜索</el-button>
         <el-button type="primary" icon="el-icon-plus" size="mini" @click="handleCreate">添加</el-button>
+
       </el-form-item>
     </el-form>
+    <el-row :gutter="10" class="mb8">
+      <el-col :span="1.5">
+        <el-button
+          type="primary"
+          icon="el-icon-top"
+          size="mini"
+          :disabled="multiple"
+          @click="handlerBatchOnline"
+          v-hasPermi="['datasync:job:online']"
+        >批量上线</el-button>
+      </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="danger"
+          icon="el-icon-bottom"
+          size="mini"
+          :disabled="multiple"
+          @click="handlerBatchOffline"
+          v-hasPermi="['datasync:job:offline']"
+        >批量下线</el-button>
+      </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="success"
+          icon="el-icon-caret-right"
+          size="mini"
+          :disabled="multiple"
+          @click="handlerBatchTrigger"
+          v-hasPermi="['datasync:job:start']"
+        >批量启动</el-button>
+      </el-col>
+
+      <right-toolbar :showSearch.sync="showSearch" @queryTable="fetchData"></right-toolbar>
+    </el-row>
     <el-table
       v-loading="listLoading"
       :data="list"
@@ -41,7 +76,9 @@
       highlight-current-row
       style="width: 100%"
       size="medium"
+      @selection-change="handleSelectionChange"
     >
+      <el-table-column type="selection" width="55" align="center" />
       <el-table-column align="center" label="ID" width="200">
         <template slot-scope="scope">{{ scope.row.id }}</template>
       </el-table-column>
@@ -64,10 +101,10 @@
           <el-switch
             v-model="scope.row.triggerStatus"
             active-color="#00A854"
-            active-text="启动"
+            active-text="上线"
             :active-value="1"
             inactive-color="#F04134"
-            inactive-text="停止"
+            inactive-text="下线"
             :inactive-value="0"
             @change="changeSwitch(scope.row)"
           />
@@ -369,6 +406,8 @@ export default {
       list: null,
       listLoading: true,
       total: 0,
+      multiple: true,
+      showSearch: true,
       listQuery: {
         current: 1,
         size: 10,
@@ -522,6 +561,12 @@ export default {
         })
         .catch(_ => {})
     },
+    // 多选框选中数据
+    handleSelectionChange(selection) {
+      this.ids = selection.map(item => item.id)
+      //this.single = selection.length!=1
+      this.multiple = !selection.length
+    },
     getExecutor() {
       job.getExecutorList().then(response => {
         const { content } = response
@@ -671,10 +716,9 @@ export default {
       }).then(() => {
         job.removeJob(row.id).then(response => {
           this.fetchData()
-            this.msgSuccess("删除成功");
+          this.msgSuccess("删除成功");
         })
       })
-
       // const index = this.list.indexOf(row)
     },
     handlerExecute(row) {
@@ -703,6 +747,44 @@ export default {
     handlerStop(row) {
       job.stopJob(row.id).then(response => {
           this.msgSuccess("停止成功");
+      })
+    },
+    handlerBatchOnline() {
+      const ids = this.ids;
+      this.$confirm('是否上线编号为"' + ids + '"的任务项?', "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(() => {
+        job.batchOnlineJob(ids).then(response => {
+          this.fetchData()
+          this.msgSuccess("上线成功");
+        })
+      })
+    },
+    handlerBatchOffline() {
+      const ids = this.ids;
+      this.$confirm('是否下线编号为"' + ids + '"的任务项?', "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(() => {
+        job.batchOfflineJob(ids).then(response => {
+          this.fetchData()
+          this.msgSuccess("下线成功");
+        })
+      })
+    },
+    handlerBatchTrigger() {
+      const ids = this.ids;
+      this.$confirm('是否执行编号为"' + ids + '"的任务项?', "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(() => {
+        job.batchTriggerJob(ids).then(response => {
+          this.msgSuccess("执行成功");
+        })
       })
     },
     changeSwitch(row) {

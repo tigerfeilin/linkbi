@@ -1,11 +1,15 @@
 module.exports = {
-  title: 'LinkBI灵柏',
+  title: '数据管理平台',
 
   /**
    * 侧边栏主题 深色主题theme-dark，浅色主题theme-light
    */
-  sideTheme: 'theme-dark',
+  sideTheme: 'theme-light',
 
+  /**
+   * 主题风格 默认红色
+   */
+  theme: '#f5222d',
   /**
    * 是否系统布局配置
    */

@@ -83,6 +83,10 @@ public class JobServiceImpl implements JobService {
     @Override
     public ReturnT<String> add(JobInfo jobInfo) {
         // valid
+        if(jobInfo.getJobGroup() == null)
+        {
+            return new ReturnT<>(ReturnT.FAIL_CODE, (I18nUtil.getString("system_please_choose") + I18nUtil.getString("jobinfo_field_jobgroup")));
+        }
         JobGroup group = jobGroupMapper.load(jobInfo.getJobGroup());
         if (group == null) {
             return new ReturnT<>(ReturnT.FAIL_CODE, (I18nUtil.getString("system_please_choose") + I18nUtil.getString("jobinfo_field_jobgroup")));
@@ -433,8 +437,8 @@ public class JobServiceImpl implements JobService {
         List<String> rColumns;
         List<String> wColumns;
         for (int i = 0; i < rdTables.size(); i++) {
-            rColumns = JDBCQueryService.getColumns(dto.getReaderDatasourceId(),"", rdTables.get(i)).stream().map(ColumnDescription::getFieldName).collect(Collectors.toList());
-            wColumns = JDBCQueryService.getColumns(dto.getWriterDatasourceId(),"", wrTables.get(i)).stream().map(ColumnDescription::getFieldName).collect(Collectors.toList());
+            rColumns = JDBCQueryService.getColumns(dto.getReaderDatasourceId(),dto.getReaderSchema(), rdTables.get(i)).stream().map(ColumnDescription::getFieldName).collect(Collectors.toList());
+            wColumns = JDBCQueryService.getColumns(dto.getWriterDatasourceId(),dto.getWriterSchema(), wrTables.get(i)).stream().map(ColumnDescription::getFieldName).collect(Collectors.toList());
 
             jsonBuild.setReaderDatasourceId(dto.getReaderDatasourceId());
             jsonBuild.setWriterDatasourceId(dto.getWriterDatasourceId());
@@ -446,11 +450,17 @@ public class JobServiceImpl implements JobService {
             jsonBuild.setRdbmsWriter(dto.getRdbmsWriter());
 
             List<String> rdTable = new ArrayList<>();
-            rdTable.add(rdTables.get(i));
+            if(StringUtils.isNotEmpty(dto.getReaderSchema()))
+                rdTable.add(dto.getReaderSchema() + "." + rdTables.get(i));
+            else
+                rdTable.add(rdTables.get(i));
             jsonBuild.setReaderTables(rdTable);
 
             List<String> wdTable = new ArrayList<>();
-            wdTable.add(wrTables.get(i));
+            if(StringUtils.isNotEmpty(dto.getWriterSchema()))
+                wdTable.add(dto.getWriterSchema() + "." + wrTables.get(i));
+            else
+                wdTable.add(wrTables.get(i));
             jsonBuild.setWriterTables(wdTable);
 
             String json = dataxJsonService.buildJobJson(jsonBuild);
@@ -458,6 +468,7 @@ public class JobServiceImpl implements JobService {
             JobTemplate jobTemplate = jobTemplateMapper.loadById(dto.getTemplateId());
             JobInfo jobInfo = new JobInfo();
             BeanUtils.copyProperties(jobTemplate, jobInfo);
+            jobInfo.setId(IdUtils.getId());
             jobInfo.setJobJson(json);
             jobInfo.setJobDesc(rdTables.get(i));
             jobInfo.setAddTime(new Date());

@@ -14,6 +14,7 @@ import com.linkbi.datax.api.domain.MetaDataSource;
 import com.linkbi.datax.api.service.DataViewDashboardService;
 import com.linkbi.datax.api.service.MetaDataSourceService;
 import com.linkbi.datax.db.util.LocalCacheUtil;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
@@ -34,6 +35,7 @@ import java.util.Map;
  * @version v1.0
  * @since 2019-07-30
  */
+@Api(tags = "看板接口")
 @RestController
 @RequestMapping("/api/dashboard")
 public class DataViewDashboardController extends BaseController {
@@ -94,12 +96,12 @@ public class DataViewDashboardController extends BaseController {
         return AjaxResult.success(dataViewDashboardService.deleteChart(chartId,dashboardId));
     }
     @GetMapping("/listChartByDashboardId/{dashboardId}")
-    @PreAuthorize("@ss.hasPermi('dataview:dashboard:update')")
+    //@PreAuthorize("@ss.hasPermi('dataview:dashboard:update')")
     public AjaxResult listChartByDashboardId(@PathVariable Long dashboardId){
         return AjaxResult.success(dataViewDashboardService.listChartByDashboardId(dashboardId));
     }
     @GetMapping("/listDashboardByChartId/{chartId}")
-    @PreAuthorize("@ss.hasPermi('dataview:dashboard:update')")
+    //@PreAuthorize("@ss.hasPermi('dataview:dashboard:update')")
     public AjaxResult listDashboardByChartId(@PathVariable Long chartId){
         return AjaxResult.success(dataViewDashboardService.listDashboardByChartId(chartId));
     }

@@ -1,10 +1,10 @@
 <template>
   <div class="login">
-    <div class="login-logo">
+    <!--<div class="login-logo">
       <img src="../assets/logo/logo.png">
-    </div>
+    </div>-->
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form">
-      <h3 class="title">LinkBI 灵柏</h3>
+      <h3 class="title">数据管理平台</h3>
       <el-form-item prop="username">
         <el-input v-model="loginForm.username" type="text" auto-complete="off" placeholder="账号">
           <svg-icon slot="prefix" icon-class="user" class="el-input__icon input-icon" />
@@ -51,7 +51,7 @@
     </el-form>
     <!--  底部  -->
     <div class="el-login-footer">
-      <span>Copyright © 2021-2022 灵柏技术团队 All Rights Reserved.</span>
+      <span>Copyright © 2021-2022 AMDATA All Rights Reserved.</span>
     </div>
   </div>
 </template>
@@ -150,7 +150,7 @@
   .login {
     height: 100%;
     display: flex;
-    justify-content: flex-end;
+    justify-content: center;//flex-end;
     align-items: center;
     background-image: url("../assets/images/login-background.jpg");
     background-size: cover;
@@ -169,12 +169,12 @@
   .title {
     margin: 0px auto 30px auto;
     text-align: center;
-    color:#ffffff;
+    color: #000000;
     //color: #707070;
   }
 
   .login-form {
-    margin-right: 150px;
+    //margin-right: 150px;
     border-radius: 6px;
     //background: #ffffff;
     //background: #ffffff;
@@ -213,7 +213,7 @@
     bottom: 0;
     width: 100%;
     text-align: center;
-    color: #fff;
+    color: #323232;
     font-family: Arial;
     font-size: 12px;
     letter-spacing: 1px;

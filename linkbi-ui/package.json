@@ -1,7 +1,7 @@
 {
    "name": "vue-element-admin",
    "version": "3.4.0",
-   "description": "LinkBI 灵柏",
+   "description": "数据管理平台",
    "author": "TL",
    "license": "MIT",
    "scripts": {

@@ -242,8 +242,10 @@ export default {
       visible: true,
       dataSources: [
         { value: 'mysql', label: 'mysql' },
+        { value: 'doris', label: 'doris' },
         { value: 'oracle', label: 'oracle' },
         { value: 'postgresql', label: 'postgresql' },
+        { value: 'greenplum', label: 'greenplum' },
         { value: 'sqlserver', label: 'sqlserver' },
         { value: 'hive', label: 'hive' },
         { value: 'hbase', label: 'hbase' },
@@ -275,13 +277,13 @@ export default {
           return ret
       },
     selectDataSource(datasource) {
-      if (datasource === 'mysql') {
+      if (datasource === 'mysql' || datasource === 'doris') {
         this.temp.jdbcUrl = 'jdbc:mysql://{host}:{port}/{database}'
         this.temp.jdbcDriverClass = 'com.mysql.jdbc.Driver'
       } else if (datasource === 'oracle') {
         this.temp.jdbcUrl = 'jdbc:oracle:thin:@//{host}:{port}/{database}'
         this.temp.jdbcDriverClass = 'oracle.jdbc.OracleDriver'
-      } else if (datasource === 'postgresql') {
+      } else if (datasource === 'postgresql' || datasource === 'greenplum') {
         this.temp.jdbcUrl = 'jdbc:postgresql://{host}:{port}/{database}'
         this.temp.jdbcDriverClass = 'org.postgresql.Driver'
       } else if (datasource === 'sqlserver') {

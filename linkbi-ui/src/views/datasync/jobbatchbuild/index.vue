@@ -17,7 +17,7 @@
       <div v-show="active===3" class="step3">
         <Mapper ref="mapper" />
       </div>
-      <div v-show="active===4" class="step4">
+      <div v-show="active===4" v-loading="loading" element-loading-text="创建中..."  class="step4">
         <el-button type="primary" @click="handleJobTemplateSelectDrawer">{{ jobTemplate ? jobTemplate : "1.选择模板" }}</el-button>
         <el-button type="primary" @click="createJob">2.批量创建任务</el-button>
         (步骤：选择模板->批量创建任务)
@@ -31,7 +31,6 @@
             v-loading="listLoading"
             :data="list"
             element-loading-text="Loading"
-
             highlight-current-row
             destroy-on-close="true"
             @current-change="handleCurrentChange"
@@ -83,6 +82,7 @@ export default {
       jobTemplateSelectDrawer: false,
       list: null,
       currentRow: null,
+      loading: false,
       listLoading: true,
       total: 0,
       listQuery: {
@@ -180,8 +180,10 @@ export default {
       const rdbmsWriter = {}
       const obj = {
         readerDatasourceId: readerData.datasourceId,
+        readerSchema: readerData.tableSchema,
         readerTables: readerTables,
         writerDatasourceId: writeData.datasourceId,
+        writerSchema: writeData.tableSchema,
         writerTables: writerTables,
         rdbmsReader: rdbmsReader,
         rdbmsWriter: rdbmsWriter,
@@ -193,10 +195,16 @@ export default {
             cancelButtonText: '取消',
             type: 'warning'
         }).then(() => {
+            this.loading = true
             job.batchAddJob(obj).then(response => {
                 this.msgSuccess("创建成功");
                 this.active = 1
-            })
+                this.loading = false
+            }).catch( e => {
+              this.loading = false;
+              this.msgError(e);
+            });
+            //this.listLoading = false
         })
     },
     handleCopy(text, event) {

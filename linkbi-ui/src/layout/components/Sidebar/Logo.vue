@@ -36,7 +36,7 @@ export default {
   },
   data() {
     return {
-      title: 'LinkBI 灵柏',
+      title: '数据管理平台',
       logo: logoImg,
 	    logo_collapse: logoImg_collapse
     }

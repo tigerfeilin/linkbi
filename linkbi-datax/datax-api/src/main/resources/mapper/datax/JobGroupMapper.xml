@@ -7,7 +7,7 @@
         <result column="id" property="id"/>
         <result column="app_name" property="appName"/>
         <result column="title" property="title"/>
-        <result column="order" property="order"/>
+        <result column="order_num" property="orderNum"/>
         <result column="address_type" property="addressType"/>
         <result column="address_list" property="addressList"/>
     </resultMap>
@@ -16,7 +16,7 @@
 		t.id,
 		t.app_name,
 		t.title,
-		t.order,
+		t.order_num,
 		t.address_type,
 		t.address_list
 	</sql>
@@ -25,12 +25,12 @@
         SELECT
         <include refid="Base_Column_List"/>
         FROM job_group AS t
-        ORDER BY t.order ASC
+        ORDER BY t.order_num ASC
     </select>
 
     <select id="find" resultMap="JobGroup">
         select
-        id,app_name,title,order,address_type,address_list
+        id,app_name,title,order_num,address_type,address_list
         from job_group
         <where>
             <if test="appName != null and appName != ''">
@@ -50,19 +50,19 @@
         <include refid="Base_Column_List"/>
         FROM job_group AS t
         WHERE t.address_type = #{addressType}
-        ORDER BY t.order ASC
+        ORDER BY t.order_num ASC
     </select>
 
     <insert id="save" parameterType="com.linkbi.datax.api.domain.JobGroup" useGeneratedKeys="true" keyProperty="id">
-		INSERT INTO job_group (id, app_name, title, order, address_type, address_list)
-		values (#{id}, #{appName}, #{title}, #{order}, #{addressType}, #{addressList});
+		INSERT INTO job_group (id, app_name, title, order_num, address_type, address_list)
+		values (#{id}, #{appName}, #{title}, #{orderNum}, #{addressType}, #{addressList});
 	</insert>
 
     <update id="update" parameterType="com.linkbi.datax.api.domain.JobGroup">
 		UPDATE job_group
 		SET app_name = #{appName},
 			title = #{title},
-			"order" = #{order},
+            order_num = #{orderNum},
 			address_type = #{addressType},
 			address_list = #{addressList}
 		WHERE id = #{id}

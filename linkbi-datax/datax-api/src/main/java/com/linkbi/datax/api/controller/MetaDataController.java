@@ -202,7 +202,7 @@ public class MetaDataController extends BaseController {
 
     @GetMapping("/adhoc_nolimit")
     //@ApiOperation("即席查询功能")
-    @PreAuthorize("@ss.hasPermi('metadata:adhoc:sqlquery')")
+    //@PreAuthorize("@ss.hasPermi('metadata:adhoc:sqlquery')")
     public Map<String,Object> adhoc_nolimit(Long datasourceId,String tableSchema, String tableName, String querySql) {
         return JDBCQueryService.queryDataList(datasourceId,tableSchema,tableName,querySql);
     }
@@ -321,19 +321,19 @@ public class MetaDataController extends BaseController {
         return success(list);
     }
     @PostMapping("/insertMarket")
-    @PreAuthorize("@ss.hasPermi('metadata:market:insert')")
+    //@PreAuthorize("@ss.hasPermi('metadata:market:insert')")
     @Log(title = "数据集市", businessType = BusinessType.INSERT)
     public R<Integer> insertMarket(MetaDataMarket entity){
         return success(metaDataMarketService.insertMarket(entity));
     }
     @PutMapping("/editMarket")
-    @PreAuthorize("@ss.hasPermi('metadata:market:edit')")
+    //@PreAuthorize("@ss.hasPermi('metadata:market:edit')")
     @Log(title = "数据集市", businessType = BusinessType.INSERT)
     public R<Boolean> editMarket(MetaDataMarket entity){
         return success(metaDataMarketService.updateById(entity));
     }
     @DeleteMapping("/deleteMarket")
-    @PreAuthorize("@ss.hasPermi('metadata:market:delete')")
+    //@PreAuthorize("@ss.hasPermi('metadata:market:delete')")
     @Log(title = "数据集市", businessType = BusinessType.INSERT)
     public R<Boolean> deleteMarket(Long marketId){
         if(metaDataMarketService.removeById(marketId))

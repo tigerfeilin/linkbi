@@ -25,7 +25,7 @@
               <div class="bottom clearfix">
                 <time class="time">{{ item.updateTime }}</time><br>
                 <el-button type="text" size="small" icon="el-icon-view" @click="viewDashboard(item)">浏览</el-button>
-                <el-button v-if="checkPermi(['dataview:dashboard:edit'])" type="text" size="small" icon="el-icon-edit" @click="editDashboard(item)">编辑</el-button>
+                <el-button v-if="checkPermi(['dataview:dashboard:update'])" type="text" size="small" icon="el-icon-edit" @click="editDashboard(item)">编辑</el-button>
                 <el-button v-if="checkPermi(['dataview:dashboard:delete'])" type="text" size="small" icon="el-icon-delete" @click="deleteDashboard(item)">删除</el-button>
               </div>
             </div>

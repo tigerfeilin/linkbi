@@ -48,6 +48,8 @@ public interface JdbcConstants {
     String MYSQL_DRIVER_6             = "com.mysql.cj.jdbc.Driver";
     String MYSQL_DRIVER_REPLICATE     = "com.mysql.jdbc.";
 
+    String DORIS                      = "doris";
+
     String MARIADB                    = "mariadb";
     String MARIADB_DRIVER             = "org.mariadb.jdbc.Driver";
 
@@ -77,7 +79,7 @@ public interface JdbcConstants {
     String OCEANBASE_DRIVER           = "com.mysql.jdbc.Driver";
     String INFORMIX                   = "informix";
 
-    String GREENPLUM                  = "Greenplum";
+    String GREENPLUM                  = "greenplum";
     String GREENPLUM_DRIVER           = "com.pivotal.jdbc.GreenplumDriver";
     /**
      * 阿里云odps

@@ -16,7 +16,7 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item v-show="dataSource==='postgresql' || dataSource==='oracle' ||dataSource==='sqlserver'" label="Schema：" prop="tableSchema">
+      <el-form-item v-show="dataSource==='postgresql' || this.dataSource === 'greenplum' || dataSource==='oracle' ||dataSource==='sqlserver'" label="Schema：" prop="tableSchema">
         <el-select v-model="writerForm.tableSchema" filterable style="width: 300px" @change="schemaChange">
           <el-option
             v-for="item in schemaList"
@@ -131,7 +131,7 @@ export default {
       {
          this.wDsChange(this.writerForm.datasourceId);
       }
-      if (this.dataSource === 'postgresql' || this.dataSource === 'oracle' || this.dataSource === 'sqlserver') {
+      if (this.dataSource === 'postgresql' || this.dataSource === 'greenplum' || this.dataSource === 'oracle' || this.dataSource === 'sqlserver') {
         this.getSchema()
       } else {
         this.getTables('rdbmsWriter')
@@ -159,7 +159,7 @@ export default {
     getTables(type) {
       if (type === 'rdbmsWriter') {
         let obj = {}
-        if (this.dataSource === 'postgresql' || this.dataSource === 'oracle' || this.dataSource === 'sqlserver') {
+        if (this.dataSource === 'postgresql' || this.dataSource === 'greenplum' || this.dataSource === 'oracle' || this.dataSource === 'sqlserver') {
           obj = {
             datasourceId: this.writerForm.datasourceId,
             tableSchema: this.writerForm.tableSchema
@@ -174,6 +174,9 @@ export default {
         dsQueryApi.getTables(obj).then(response => {
           this.wTbList = response.data
           this.loading = false
+        }).catch( e => {
+          this.loading = false;
+          this.msgError(e);
         })
       }
     },
@@ -185,6 +188,9 @@ export default {
       dsQueryApi.getTableSchema(obj).then(response => {
         this.schemaList = response.data
         this.loading = false
+      }).catch( e => {
+        this.loading = false;
+        this.msgError(e);
       })
     },
     // schema 切换
@@ -220,6 +226,9 @@ export default {
         this.writerForm.checkAll = true
         this.writerForm.isIndeterminate = false
         this.loading = false
+      }).catch( e => {
+        this.loading = false;
+        this.msgError(e);
       })
     },
       getColumnsByQuerySql() {
@@ -235,6 +244,9 @@ export default {
                   this.writerForm.checkAll = true
                   this.writerForm.isIndeterminate = false
                   this.loading = false
+              }).catch( e => {
+                this.loading = false;
+                this.msgError(e);
               })
           }
       },

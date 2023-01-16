@@ -43,7 +43,11 @@ public class DatabasePostgresImpl extends AbstractDatabase implements IDatabaseI
 	public String formatSQL(String sql) {
 		return SQLUtils.formatPGSql(sql,null);
 	}
-	
+
+	@Override
+	public String getQuotedSchemaTableCombination(String schemaName, String tableName) {
+		return String.format(" %s.%s ", schemaName, tableName);
+	}
 	@Override
 	public String getFieldDefinition(ColumnMetaData v, List<String> pks, boolean useAutoInc, boolean addCr) {
 		String fieldname = v.getName();
@@ -51,7 +55,7 @@ public class DatabasePostgresImpl extends AbstractDatabase implements IDatabaseI
 		int precision = v.getPrecision();
 		int type = v.getType();
 
-		String retval = " \"" + fieldname + "\"   ";
+		String retval = " " + fieldname + "   ";
 
 		switch (type) {
 		case ColumnMetaData.TYPE_TIMESTAMP:

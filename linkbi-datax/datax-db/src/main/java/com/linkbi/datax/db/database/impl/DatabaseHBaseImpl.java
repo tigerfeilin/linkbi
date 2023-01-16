@@ -58,7 +58,7 @@ public class DatabaseHBaseImpl extends AbstractDatabase implements IDatabaseInte
 					getDataSource(jdbcSourceData);
 				}
 			}
-			LocalCacheUtil.set(jdbcSourceData.getDatasourceName(), connection, 4 * 60 * 60 * 1000);
+			LocalCacheUtil.set(jdbcSourceData.getJdbcUrl(), connection, 4 * 60 * 60 * 1000);
 		} catch (RuntimeException e) {
 			throw new RuntimeException(e);
 		}

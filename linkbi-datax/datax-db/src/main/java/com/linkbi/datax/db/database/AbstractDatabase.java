@@ -49,13 +49,13 @@ public abstract class AbstractDatabase implements IDatabaseInterface {
 			if (LocalCacheUtil.get(jdbcSourceData.getDatasourceId()) == null) {
 				getDataSource(jdbcSourceData);
 			} else {
-				this.connection = (Connection) LocalCacheUtil.get(jdbcSourceData.getDatasourceId());
+				this.connection = (Connection) LocalCacheUtil.get(jdbcSourceData.getJdbcUrl());
 				if (!this.connection.isValid(500)) {
 					LocalCacheUtil.remove(jdbcSourceData.getJdbcUrl());
 					getDataSource(jdbcSourceData);
 				}
 			}
-			LocalCacheUtil.set(jdbcSourceData.getDatasourceId(), this.connection, 4 * 60 * 60 * 1000);
+			LocalCacheUtil.set(jdbcSourceData.getJdbcUrl(), this.connection, 4 * 60 * 60 * 1000);
 			this.metaData = Objects.requireNonNull(this.connection.getMetaData());
 		} catch (SQLException | RuntimeException e) {
 			throw new RuntimeException(e);

@@ -277,6 +277,9 @@
                     const { records } = response.data
                     this.rDsList = records
                     this.loading = false
+                }).catch( e => {
+                  this.loading = false
+                  this.msgError(e);
                 })
             },
             // 获取表名
@@ -300,6 +303,9 @@
                             this.rTbList = response.data
                             this.loading = false
                         }
+                    }).catch( e => {
+                      this.loading = false
+                      this.msgError(e);
                     })
                 }
             },
@@ -307,8 +313,13 @@
                 const obj = {
                     datasourceId: this.listQuery.datasourceId
                 }
+                this.loading = true
                 dsQueryApi.getTableSchema(obj).then(response => {
                     this.schemaList = response.data
+                    this.loading = false
+                }).catch( e => {
+                  this.loading = false
+                  this.msgError(e);
                 })
             },
             // schema 切换
@@ -327,6 +338,7 @@
                 this.listQuery.tableName = ''
                 this.listQuery.tableSchema = ''
                 this.listQuery.datasourceId = e
+                this.loading = true
                 if(this.rDsList.length === 0)
                 {
                     jdbcDsList(this.jdbcDsQuery).then(response => {
@@ -342,6 +354,10 @@
                                 }
                             }
                         })
+                        this.loading = false
+                    }).catch( e => {
+                      this.loading = false
+                      this.msgError(e);
                     })
                 }
                 else

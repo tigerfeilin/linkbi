@@ -25,16 +25,24 @@ const payload = {
 const token = jwt.sign(payload, mb_secret_key);
 const iUrl = mb_site_url + "/embed/dashboard/" + token + "#refresh=60&bordered=false&titled=false";//#theme=night&
  */
-const iUrl = "/public/dashboard/eed88e73-a079-47ef-a86c-edf6cf2674b1" + "#refresh=60&bordered=false&titled=false";//#theme=night&
+//const iUrl = "/public/dashboard/eed88e73-a079-47ef-a86c-edf6cf2674b1" + "#refresh=60&bordered=false&titled=false";//#theme=night&
 export default {
     name: 'Index',
     data() {
         return {
             iframeUrl: this.metabaseUrl,
         }
+
+    },
+    beforeCreate(){
+      this.getConfigKey("sys.metabase.url").then(response => {
+        this.iframeUrl = response.msg;
+      });
+
     },
     mounted() {
-        console.info(this.metabaseUrl);
+        console.info(this.iframeUrl);
+        //console.info(this.$store.state.tagsView.cachedViews);
         this.initIframeHeight();
         this.adaptIframeHeight();
         window.onresize = () => {
@@ -48,7 +56,7 @@ export default {
                     cHeight = Math.max(iDoc.body.clientHeight, iDoc.documentElement.clientHeight);
                     sHeight = Math.max(iDoc.body.scrollHeight, iDoc.documentElement.scrollHeight);
                 }
-                console.info("cHeight=" + cHeight + ", sHeight=" + sHeight);
+                //console.info("cHeight=" + cHeight + ", sHeight=" + sHeight);
                 let height = Math.max(cHeight, sHeight) < this.$root.mb_MaxHeight ? this.$root.mb_MaxHeight : Math.max(cHeight, sHeight);
                 this.$root.mb_MaxHeight = this.$root.mb_MaxHeight < height ? height : this.$root.mb_MaxHeight;
                 oIframe.style.height = height + 'px';
@@ -113,7 +121,7 @@ export default {
                     cHeight = Math.max(iDoc.body.clientHeight, iDoc.documentElement.clientHeight);
                     sHeight = Math.max(iDoc.body.scrollHeight, iDoc.documentElement.scrollHeight);
                 }
-                console.info("cHeight=" + cHeight + ", sHeight=" + sHeight);
+                //console.info("cHeight=" + cHeight + ", sHeight=" + sHeight);
                 let height = Math.max(cHeight, sHeight) < this.$root.mb_MaxHeight ? this.$root.mb_MaxHeight : Math.max(cHeight, sHeight);
                 this.$root.mb_MaxHeight = this.$root.mb_MaxHeight < height ? height : this.$root.mb_MaxHeight;
                 oIframe.style.height = height + 'px';
@@ -144,7 +152,7 @@ export default {
                     }
                     let height = Math.max(cHeight, sHeight) < this.$root.mb_MaxHeight ? this.$root.mb_MaxHeight : Math.max(cHeight, sHeight);
                     this.$root.mb_MaxHeight = this.$root.mb_MaxHeight < height ? height : this.$root.mb_MaxHeight;
-                    console.info("cHeight=" + cHeight + ", sHeight=" + sHeight);
+                    //console.info("cHeight=" + cHeight + ", sHeight=" + sHeight);
                     oIframe.style.height = height + 'px';
                     // 隐藏 Power By MetaBase
                     if(!iDoc && typeof(iDoc) !== undefined)

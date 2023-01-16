@@ -42,8 +42,10 @@ public class MetaDataSourceServiceImpl extends ServiceImpl<MetaDataSourceMapper,
         if (pwd == null) {
             metaDatasource.setJdbcPassword(AESUtil.encrypt(metaDatasource.getJdbcPassword()));
         }
-
-        JdbcSourceData jdbcSourceData = new JdbcSourceData(metaDatasource.getId().toString(),metaDatasource.getDatasourceName(),metaDatasource.getJdbcDriverClass(), metaDatasource.getJdbcUrl(),AESUtil.decrypt(metaDatasource.getJdbcUsername()),
+        String datasourceId = "";
+        if(metaDatasource.getId() != null)
+            datasourceId = metaDatasource.getId().toString();
+        JdbcSourceData jdbcSourceData = new JdbcSourceData(datasourceId,metaDatasource.getDatasourceName(),metaDatasource.getJdbcDriverClass(), metaDatasource.getJdbcUrl(),AESUtil.decrypt(metaDatasource.getJdbcUsername()),
                 AESUtil.decrypt(metaDatasource.getJdbcPassword()), metaDatasource.getDatabaseName());
         return metaDataService.dataSourceTest(jdbcSourceData);
     }

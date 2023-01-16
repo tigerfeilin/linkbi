@@ -34,6 +34,7 @@ import java.util.Map;
  * @version v1.0
  * @since 2019-07-30
  */
+@Api(tags = "图表接口")
 @RestController
 @RequestMapping("/api/chart")
 public class DataViewChartController extends BaseController {
