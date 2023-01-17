@@ -32,6 +32,13 @@ public interface DataxPluginInterface {
 
 
     /**
+     * doris json构建
+     * @param dataxDorisPojo
+     * @return
+     */
+    Map<String, Object> buildDoris(DataxRdbmsPojo dataxDorisPojo);
+
+    /**
      * hive json构建
      * @param dataxHivePojo
      * @return

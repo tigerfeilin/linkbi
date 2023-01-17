@@ -20,7 +20,7 @@ public class LinkBIApplication
     {
         // System.setProperty("spring.devtools.restart.enabled", "false");
         SpringApplication.run(LinkBIApplication.class, args);
-        System.out.println("(♥◠‿◠)ﾉﾞ  中国移动linkbi启动成功   ლ(´ڡ`ლ)ﾞ  \n" +
+        System.out.println("(♥◠‿◠)ﾉﾞ  linkbi启动成功   ლ(´ڡ`ლ)ﾞ  \n" +
                 " .-------.       ____     __        \n" +
                 " |  _ _   \\      \\   \\   /  /    \n" +
                 " | ( ' )  |       \\  _. /  '       \n" +

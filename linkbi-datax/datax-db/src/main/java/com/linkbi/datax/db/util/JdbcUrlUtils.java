@@ -215,5 +215,25 @@ public class JdbcUrlUtils {
 			return null;
 		}
 	}
+	/**
+	 * 从MJDBC的URL中提取数据库名称
+	 *
+	 * @param jdbcUrl JDBC连接的URL字符串
+	 * @return Map 参数列表
+	 */
+	public static String findDBNameByJdbcUrl(String jdbcUrl) {
+		Pattern pattern = null;
+		if (jdbcUrl.indexOf('?') > 0) {
+			pattern = patternWithParam;
+		} else {
+			pattern = patternSimple;
+		}
 
+		Matcher m = pattern.matcher(jdbcUrl);
+		if (m.find()) {
+			return m.group("schema");
+		} else {
+			return null;
+		}
+	}
 }

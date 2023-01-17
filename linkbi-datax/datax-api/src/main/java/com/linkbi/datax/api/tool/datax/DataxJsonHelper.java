@@ -151,7 +151,7 @@ public class DataxJsonHelper implements DataxJsonInterface {
             buildWriter = this.buildWriter();
         } else if (DORIS.equals(datasource)) {
             writerPlugin = new DorisWriter();
-            buildWriter = this.buildWriter();
+            buildWriter = this.buildDorisWriter();
         } else if (ORACLE.equals(datasource)) {
             writerPlugin = new OraclelWriter();
             buildWriter = this.buildWriter();
@@ -332,6 +332,17 @@ public class DataxJsonHelper implements DataxJsonInterface {
         dataxPluginPojo.setPreSql(rdbmsWriterDto.getPreSql());
         dataxPluginPojo.setPostSql(rdbmsWriterDto.getPostSql());
         return writerPlugin.build(dataxPluginPojo);
+    }
+
+    @Override
+    public Map<String, Object> buildDorisWriter() {
+        DataxRdbmsPojo dataxPluginPojo = new DataxRdbmsPojo();
+        dataxPluginPojo.setMetaDatasource(writerDatasource);
+        dataxPluginPojo.setTables(writerTables);
+        dataxPluginPojo.setRdbmsColumns(writerColumns);
+        dataxPluginPojo.setPreSql(rdbmsWriterDto.getPreSql());
+        dataxPluginPojo.setPostSql(rdbmsWriterDto.getPostSql());
+        return writerPlugin.buildDoris(dataxPluginPojo);
     }
 
     @Override

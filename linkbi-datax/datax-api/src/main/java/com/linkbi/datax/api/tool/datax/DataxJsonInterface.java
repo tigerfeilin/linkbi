@@ -32,5 +32,7 @@ public interface DataxJsonInterface {
 
     Map<String, Object> buildMongoDBWriter();
 
+    Map<String, Object> buildDorisWriter();
+
     Map<String, Object> buildWriter();
 }

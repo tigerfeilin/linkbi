@@ -47,7 +47,7 @@
       <!-- <el-table-column label="jdbc驱动类" width="200" align="center" :show-overflow-tooltip="true">
         <template slot-scope="scope">{{ scope.row.jdbcDriverClass ? scope.row.jdbcDriverClass:'-' }}</template>
       </el-table-column>-->
-      <el-table-column label="ZK地址" width="200" align="center" :show-overflow-tooltip="true">
+      <el-table-column label="ZK/FE地址" width="200" align="center" :show-overflow-tooltip="true">
         <template slot-scope="scope">{{ scope.row.zkAdress ? scope.row.zkAdress:'-' }}</template>
       </el-table-column>
       <!--
@@ -142,6 +142,9 @@
         </el-form-item>
         <el-form-item v-if="hbase" label="ZK地址" prop="zkAdress">
           <el-input v-model="temp.zkAdress" placeholder="127.0.0.1:2181" style="width: 60%" />
+        </el-form-item>
+        <el-form-item v-if="doris" label="FE地址" prop="zkAdress">
+          <el-input v-model="temp.zkAdress" placeholder="127.0.0.1:8030 多个地址以;分割" style="width: 60%" />
         </el-form-item>
         <el-form-item v-if="mongodb" label="数据库名称" prop="databaseName">
           <el-input v-model="temp.databaseName" placeholder="数据库名称" style="width: 60%" />
@@ -257,7 +260,8 @@ export default {
       datasourceGroupList:[],
       jdbc: true,
       hbase: false,
-      mongodb: false
+      mongodb: false,
+      doris: false
     }
   },
   created() {
@@ -391,6 +395,9 @@ export default {
         this.jdbc = this.hbase = false
         this.mongodb = true
         this.temp.jdbcUrl = 'mongodb://[username:password@]host1[:port1][,...hostN[:portN]]][/[database][?options]]'
+      } else if (datasource === 'doris') {
+        this.doris = this.jdbc = true
+        this.hbase = this.mongodb = false
       } else {
         this.hbase = this.mongodb = false
         this.jdbc = true

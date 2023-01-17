@@ -58,6 +58,11 @@ public abstract class BaseReaderPlugin extends BaseDataxPlugin {
     }
 
     @Override
+    public Map<String, Object> buildDoris(DataxRdbmsPojo dataxDorisPojo) {
+        return null;
+    }
+
+    @Override
     public Map<String, Object> buildHive(DataxHivePojo dataxHivePojo) {
         return null;
     }
