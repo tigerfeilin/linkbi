@@ -16,7 +16,7 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item v-show="dataSource==='postgresql' || this.dataSource === 'greenplum' || dataSource==='oracle' ||dataSource==='sqlserver'" label="Schema：" prop="tableSchema">
+      <el-form-item v-show="isShowSchema() === true" label="Schema：" prop="tableSchema">
         <el-select v-model="writerForm.tableSchema" filterable style="width: 300px" @change="schemaChange">
           <el-option
             v-for="item in schemaList"
@@ -32,6 +32,7 @@
           allow-create
           default-first-option
           filterable
+          :filter-method="userFilter"
           :disabled="writerForm.ifCreateTable"
           style="width: 300px"
           @change="wTbChange"
@@ -102,6 +103,7 @@ export default {
       fromTableName: '',
       fromColumnList: [],
       wTbList: [],
+      wAllTbList: [],
       loading: false,
       dataSource: '',
       createTableName: '',
@@ -131,7 +133,7 @@ export default {
       {
          this.wDsChange(this.writerForm.datasourceId);
       }
-      if (this.dataSource === 'postgresql' || this.dataSource === 'greenplum' || this.dataSource === 'oracle' || this.dataSource === 'sqlserver') {
+      if (this.isShowSchema()) {
         this.getSchema()
       } else {
         this.getTables('rdbmsWriter')
@@ -155,11 +157,25 @@ export default {
         this.loading = false
       })
     },
+    userFilter(query = '') {
+      let arr = this.wAllTbList.filter((item) => {
+        return item.includes(query) || item.includes(query)
+      })
+      if (arr.length > 50) {
+        this.wTbList = arr.slice(0, 50)
+      } else {
+        this.wTbList = arr
+      }
+    },
+    isShowSchema()
+    {
+      return this.dataSource === 'postgresql' || this.dataSource === 'oracle' || this.dataSource === 'dameng' || this.dataSource === 'sqlserver';
+    },
     // 获取表名
     getTables(type) {
       if (type === 'rdbmsWriter') {
         let obj = {}
-        if (this.dataSource === 'postgresql' || this.dataSource === 'greenplum' || this.dataSource === 'oracle' || this.dataSource === 'sqlserver') {
+        if (this.isShowSchema()) {
           obj = {
             datasourceId: this.writerForm.datasourceId,
             tableSchema: this.writerForm.tableSchema
@@ -172,8 +188,9 @@ export default {
         // 组装
         this.loading = true
         dsQueryApi.getTables(obj).then(response => {
-          this.wTbList = response.data
+          this.wAllTbList = response.data
           this.loading = false
+          this.userFilter()
         }).catch( e => {
           this.loading = false;
           this.msgError(e);

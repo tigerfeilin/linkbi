@@ -21,7 +21,7 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item v-show="listQuery.searchType === '1' && (dataSource==='postgresql' || dataSource==='oracle' ||dataSource==='sqlserver') " label="Schema" prop="tableSchema">
+      <el-form-item v-show="listQuery.searchType === '1' && isShowSchema() === true " label="Schema" prop="tableSchema">
         <el-select v-model="listQuery.tableSchema" allow-create default-first-option filterable style="width: 300px" @change="schemaChange">
           <el-option
             v-for="item in schemaList"
@@ -32,7 +32,7 @@
         </el-select>
       </el-form-item>
       <el-form-item v-show="listQuery.searchType === '1'" label="表名" prop="tableName">
-        <el-select v-model="listQuery.tableName" allow-create default-first-option filterable style="width: 300px" >
+        <el-select v-model="listQuery.tableName" allow-create default-first-option filterable :filter-method="userFilter" style="width: 300px" >
           <el-option v-for="item in rTbList" :key="item" :label="item" :value="item" />
         </el-select>
       </el-form-item>
@@ -114,6 +114,7 @@
                 rSearhTypeList: [],
                 rDsList: [],
                 rTbList: [],
+                rAllTbList: [],
                 schemaList: [],
                 rColumnList: [],
                 loading: false,
@@ -161,7 +162,7 @@
                 {
                     this.rDsChange(this.listQuery.datasourceId);
                 }
-                if (this.dataSource === 'postgresql' || this.dataSource === 'oracle' || this.dataSource === 'sqlserver') {
+                if (this.isShowSchema()) {
                     this.getSchema()
                 } else {
                     this.getTables('rdbmsReader')
@@ -211,6 +212,20 @@
                     this.loading = false
                     this.msgError(e)
                 })
+            },
+          userFilter(query = '') {
+            let arr = this.rAllTbList.filter((item) => {
+              return item.includes(query) || item.includes(query)
+            })
+            if (arr.length > 50) {
+              this.rTbList = arr.slice(0, 50)
+            } else {
+              this.rTbList = arr
+            }
+          },
+            isShowSchema()
+            {
+              return this.dataSource === 'postgresql' || this.dataSource === 'oracle' || this.dataSource === 'dameng' || this.dataSource === 'sqlserver';
             },
             resetQuery()
             {
@@ -286,7 +301,7 @@
             getTables(type) {
                 if (type === 'rdbmsReader') {
                     let obj = {}
-                    if (this.dataSource === 'postgresql' || this.dataSource === 'oracle' || this.dataSource === 'sqlserver') {
+                    if (this.isShowSchema()) {
                         obj = {
                             datasourceId: this.listQuery.datasourceId,
                             tableSchema: this.listQuery.tableSchema
@@ -300,8 +315,9 @@
                     this.loading = true;
                     dsQueryApi.getTables(obj).then(response => {
                         if (response) {
-                            this.rTbList = response.data
+                            this.rAllTbList = response.data
                             this.loading = false
+                            this.userFilter()
                         }
                     }).catch( e => {
                       this.loading = false
@@ -310,17 +326,19 @@
                 }
             },
             getSchema() {
+              if(this.isShowSchema()){
                 const obj = {
-                    datasourceId: this.listQuery.datasourceId
+                  datasourceId: this.listQuery.datasourceId
                 }
                 this.loading = true
                 dsQueryApi.getTableSchema(obj).then(response => {
-                    this.schemaList = response.data
-                    this.loading = false
+                  this.schemaList = response.data
+                  this.loading = false
                 }).catch( e => {
                   this.loading = false
                   this.msgError(e);
                 })
+              }
             },
             // schema 切换
             schemaChange(e) {
@@ -347,7 +365,7 @@
                         this.rDsList.find((item) => {
                             if (item.id === e) {
                                 this.dataSource = item.datasource
-                                if (this.dataSource === 'postgresql' || this.dataSource === 'oracle' || this.dataSource === 'sqlserver') {
+                                if (this.isShowSchema()) {
                                     this.getSchema()
                                 } else {
                                     this.getTables('rdbmsReader')
@@ -368,7 +386,7 @@
                         }
                     })
                 }
-                if (this.dataSource === 'postgresql' || this.dataSource === 'oracle' || this.dataSource === 'sqlserver') {
+                if (this.isShowSchema()) {
                     this.getSchema()
                 } else {
                     this.getTables('rdbmsReader')

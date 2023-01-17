@@ -48,6 +48,16 @@
 			<version>19.7.0.0</version>
 		</dependency>
 
+		<!--DmBase数据库-->
+		<dependency>
+			<groupId>com.dameng</groupId>
+			<artifactId>Dm7JdbcDriver17</artifactId>
+			<version>7.6.0.142</version>
+			<!--指定项目自带jar-->
+			<scope>system</scope>
+			<systemPath>${project.basedir}/lib/Dm7JdbcDriver17-7.6.0.142.jar</systemPath>
+		</dependency>
+
 		<dependency>
 			<groupId>com.microsoft.sqlserver</groupId>
 			<artifactId>sqljdbc4</artifactId>

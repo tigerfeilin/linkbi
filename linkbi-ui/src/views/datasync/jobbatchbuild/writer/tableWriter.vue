@@ -16,7 +16,7 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item v-show="dataSource==='postgresql' || this.dataSource === 'greenplum' || dataSource==='oracle' ||dataSource==='sqlserver'" label="Schema：">
+      <el-form-item v-show="isShowSchema() === true" label="Schema：">
         <el-select v-model="writerForm.tableSchema" filterable style="width: 300px" @change="schemaChange">
           <el-option
             v-for="item in schemaList"
@@ -73,7 +73,7 @@ export default {
   },
   watch: {
     'writerForm.datasourceId': function(oldVal, newVal) {
-      if (this.dataSource === 'postgresql' || this.dataSource === 'greenplum' || this.dataSource === 'oracle' || this.dataSource === 'sqlserver') {
+      if (this.isShowSchema()) {
         this.getSchema()
       } else {
         this.getTables('writer')
@@ -93,11 +93,15 @@ export default {
         this.loading = false
       })
     },
+    isShowSchema()
+    {
+      return this.dataSource === 'postgresql' || this.dataSource === 'oracle' || this.dataSource === 'dameng' || this.dataSource === 'sqlserver';
+    },
     // 获取表名
     getTables(type) {
       if (type === 'writer') {
         let obj = {}
-        if (this.dataSource === 'postgresql' || this.dataSource === 'greenplum' || this.dataSource === 'oracle' || this.dataSource === 'sqlserver') {
+        if (this.isShowSchema()) {
           obj = {
             datasourceId: this.writerForm.datasourceId,
             tableSchema: this.writerForm.tableSchema

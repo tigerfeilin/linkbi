@@ -244,6 +244,7 @@ export default {
         { value: 'mysql', label: 'mysql' },
         { value: 'doris', label: 'doris' },
         { value: 'oracle', label: 'oracle' },
+        { value: 'dameng', label: 'dameng' },
         { value: 'postgresql', label: 'postgresql' },
         { value: 'greenplum', label: 'greenplum' },
         { value: 'sqlserver', label: 'sqlserver' },
@@ -283,6 +284,9 @@ export default {
       } else if (datasource === 'oracle') {
         this.temp.jdbcUrl = 'jdbc:oracle:thin:@//{host}:{port}/{database}'
         this.temp.jdbcDriverClass = 'oracle.jdbc.OracleDriver'
+      } else if (datasource === 'dameng') {
+        this.temp.jdbcUrl = 'jdbc:dm://{host}:{port}/{database}'
+        this.temp.jdbcDriverClass = 'dm.jdbc.driver.DmDriver'
       } else if (datasource === 'postgresql' || datasource === 'greenplum') {
         this.temp.jdbcUrl = 'jdbc:postgresql://{host}:{port}/{database}'
         this.temp.jdbcDriverClass = 'org.postgresql.Driver'
@@ -348,10 +352,12 @@ export default {
         if (valid) {
           datasourceApi.test(this.temp).then(response => {
             if (response.data === false) {
-                this.msgError("response.data.msg");
+                this.msgError("连接失败");
             } else {
                 this.msgSuccess("连接成功");
             }
+          }).catch( e => {
+            this.msgError(e);
           })
         }
       })
@@ -405,6 +411,8 @@ export default {
         }).then(() => {
             this.fetchData();
             this.msgSuccess("删除成功");
+        }).catch( e => {
+          this.msgError(e);
         })
       // const index = this.list.indexOf(row)
     },

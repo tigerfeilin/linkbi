@@ -129,6 +129,10 @@ public class DataxJsonHelper implements DataxJsonInterface {
             readerPlugin = new MongoDBReader();
             buildReader = buildMongoDBReader();
         }
+        else{
+            readerPlugin = new RdbmsReader();
+            buildReader = buildReader();
+        }
     }
 
     public void initWriter(DataXJsonBuildDto dataxJsonDto, MetaDataSource readerDatasource) {
@@ -172,6 +176,10 @@ public class DataxJsonHelper implements DataxJsonInterface {
         } else if (JdbcConstants.MONGODB.equals(datasource)) {
             writerPlugin = new MongoDBWriter();
             buildWriter = this.buildMongoDBWriter();
+        }
+        else{
+            writerPlugin = new RdbmsWriter();
+            buildWriter = this.buildWriter();
         }
     }
 

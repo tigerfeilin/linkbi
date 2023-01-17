@@ -11,7 +11,7 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item v-show="dataSource==='postgresql' || this.dataSource === 'greenplum' || dataSource==='oracle' ||dataSource==='sqlserver'" label="Schema：" prop="tableSchema">
+      <el-form-item v-show="isShowSchema() === true" label="Schema：" prop="tableSchema">
         <el-select v-model="readerForm.tableSchema" allow-create default-first-option filterable style="width: 300px" @change="schemaChange">
           <el-option
             v-for="item in schemaList"
@@ -22,7 +22,7 @@
         </el-select>
       </el-form-item>
       <el-form-item label="数据库表名：" prop="tableName">
-        <el-select v-model="readerForm.tableName" allow-create default-first-option filterable style="width: 300px" @change="rTbChange">
+        <el-select v-model="readerForm.tableName" allow-create default-first-option filterable :filter-method="userFilter" style="width: 300px" @change="rTbChange">
           <el-option v-for="item in rTbList" :key="item" :label="item" :value="item" />
         </el-select>
       </el-form-item>
@@ -74,6 +74,7 @@ export default {
       },
       rDsList: [],
       rTbList: [],
+      rAllTbList: [],
       schemaList: [],
       rColumnList: [],
       loading: false,
@@ -106,7 +107,7 @@ export default {
       {
          this.rDsChange(this.readerForm.datasourceId);
       }
-      if (this.dataSource === 'postgresql' || this.dataSource === 'greenplum' || this.dataSource === 'oracle' || this.dataSource === 'sqlserver') {
+      if (this.isShowSchema()) {
         this.getSchema()
       } else {
         this.getTables('rdbmsReader')
@@ -133,11 +134,25 @@ export default {
         this.msgError(e);
       });
     },
+    userFilter(query = '') {
+      let arr = this.rAllTbList.filter((item) => {
+        return item.includes(query) || item.includes(query)
+      })
+      if (arr.length > 50) {
+        this.rTbList = arr.slice(0, 50)
+      } else {
+        this.rTbList = arr
+      }
+    },
+    isShowSchema()
+    {
+      return this.dataSource === 'postgresql' || this.dataSource === 'oracle' || this.dataSource === 'dameng' || this.dataSource === 'sqlserver';
+    },
     // 获取表名
     getTables(type) {
       if (type === 'rdbmsReader') {
         let obj = {}
-        if (this.dataSource === 'postgresql' || this.dataSource === 'greenplum' || this.dataSource === 'oracle' || this.dataSource === 'sqlserver') {
+        if (this.isShowSchema()) {
           obj = {
             datasourceId: this.readerForm.datasourceId,
             tableSchema: this.readerForm.tableSchema
@@ -148,11 +163,12 @@ export default {
           }
         }
         // 组装
-          this.loading = true;
+        this.loading = true;
         dsQueryApi.getTables(obj).then(response => {
           if (response) {
-            this.rTbList = response.data
-              this.loading = false
+            this.rAllTbList = response.data
+            this.loading = false
+            this.userFilter()
           }
         }).catch( e => {
           this.loading = false;
@@ -191,7 +207,7 @@ export default {
               this.rDsList.find((item) => {
                   if (item.id === e) {
                       this.dataSource = item.datasource
-                      if (this.dataSource === 'postgresql' || this.dataSource === 'greenplum'  || this.dataSource === 'oracle' || this.dataSource === 'sqlserver') {
+                      if (this.isShowSchema()) {
                           this.getSchema()
                       } else {
                           this.getTables('rdbmsReader')

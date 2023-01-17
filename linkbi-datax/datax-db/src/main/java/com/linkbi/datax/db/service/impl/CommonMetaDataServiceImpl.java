@@ -102,7 +102,8 @@ public class CommonMetaDataServiceImpl implements IMetaDataService {
 			AbstractDatabase db = Objects.requireNonNull(DatabaseFactory.getDatabaseInstance(JdbcUrlUtils.getDbType(jdbcSourceData.getJdbcUrl())), "Please call setDatabaseConnection() first!");
 			db.connect(jdbcSourceData);
 		} catch (RuntimeException e) {
-			return false;
+			throw new RuntimeException(e);
+			//return false;
 		}
 		return true;
 	}

@@ -171,14 +171,14 @@ public class JdbcUrlUtils {
 			return DBTypeEnum.HIVE;
 		} else if (jdbcUrl.startsWith("jdbc:clickhouse:")) {
 			return DBTypeEnum.CLICKHOUSE;
-		}else if (jdbcUrl.startsWith("jdbc:phoenix:")) {
+		} else if (jdbcUrl.startsWith("jdbc:phoenix:")) {
 			return DBTypeEnum.HBASE20X;
 		} else if (jdbcUrl.startsWith("jdbc:elastic:")) {
 			return DBTypeEnum.ELASTIC_SEARCH;
-		} else if (jdbcUrl.startsWith("jdbc:clickhouse:")) {
-			return DBTypeEnum.CLICKHOUSE;
-		}else if (jdbcUrl.startsWith("jdbc:presto:")) {
+		} else if (jdbcUrl.startsWith("jdbc:presto:")) {
 			return DBTypeEnum.PRESTO;
+		} else if (jdbcUrl.startsWith("jdbc:dm:")) {
+			return DBTypeEnum.DM;
 		} else {
 			return null;
 		}

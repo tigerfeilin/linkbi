@@ -12,7 +12,7 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item v-show="dataSource==='postgresql' || dataSource==='oracle' ||dataSource==='sqlserver' " label="Schema" prop="tableSchema">
+      <el-form-item v-show="isShowSchema() === true " label="Schema" prop="tableSchema">
         <el-select v-model="listQuery.tableSchema" allow-create default-first-option filterable style="width: 300px" >
           <el-option
             v-for="item in schemaList"
@@ -79,6 +79,7 @@ export default {
       dbTableList: [],
       tables: [],
       loading:false,
+      showSchema:false,
       // 查询参数
       listQuery: {
         current: 1,
@@ -101,9 +102,7 @@ export default {
             {
                 this.rDsChange(this.listQuery.datasourceId);
             }
-            if (this.dataSource === 'postgresql' || this.dataSource === 'oracle' || this.dataSource === 'sqlserver') {
-                this.getSchema()
-            }
+            this.getSchema()
         }
     },
     created() {
@@ -118,6 +117,10 @@ export default {
     show() {
           //this.getList();
           this.visible = true;
+    },
+    isShowSchema()
+    {
+      return this.dataSource === 'postgresql' || this.dataSource === 'oracle' || this.dataSource === 'dameng' || this.dataSource === 'sqlserver';
     },
     getList()
     {
@@ -147,17 +150,19 @@ export default {
           })
       },
       getSchema() {
+        if(this.isShowSchema()){
           const obj = {
-              datasourceId: this.listQuery.datasourceId
+            datasourceId: this.listQuery.datasourceId
           }
           this.loading = true
           dsQueryApi.getTableSchema(obj).then(response => {
-              this.schemaList = response.data
-              this.loading = false
+            this.schemaList = response.data
+            this.loading = false
           }).catch(e =>{
-              this.msgError(e);
-              this.loading = false
+            this.msgError(e);
+            this.loading = false
           })
+        }
       },
       // schema 切换
       rDsChange(e) {
@@ -173,9 +178,7 @@ export default {
                   this.rDsList.find((item) => {
                       if (item.id === e) {
                           this.dataSource = item.datasource
-                          if (this.dataSource === 'postgresql' || this.dataSource === 'oracle' || this.dataSource === 'sqlserver') {
-                              this.getSchema()
-                          }
+                          this.getSchema()
                       }
                   })
               })
@@ -188,9 +191,7 @@ export default {
                   }
               })
           }
-          if (this.dataSource === 'postgresql' || this.dataSource === 'oracle' || this.dataSource === 'sqlserver') {
-              this.getSchema()
-          }
+          this.getSchema()
       },
     /** 搜索按钮操作 */
     handleQuery() {

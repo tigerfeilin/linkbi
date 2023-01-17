@@ -409,6 +409,8 @@
                 }).then(() => {
                     this.getList();
                     this.msgSuccess("删除成功");
+                }).catch( e => {
+                  this.msgError(e);
                 })
             },
             handleSubcribe(row){

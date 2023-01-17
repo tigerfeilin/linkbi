@@ -84,7 +84,11 @@ public enum DBTypeEnum {
 	/**
 	 * PRESTO数据库类型
 	 */
-	PRESTO(15);
+	PRESTO(15),
+	/**
+	 * 达梦数据库类型
+	 */
+	DM(16);
 	private int index;
 
 	DBTypeEnum(int idx) {

@@ -20,6 +20,7 @@ public final class DatabaseFactory {
 	{  
 	      put(DBTypeEnum.MYSQL,DatabaseMysqlImpl.class.getName());
 	      put(DBTypeEnum.ORACLE,DatabaseOracleImpl.class.getName());
+		  put(DBTypeEnum.DM,DatabaseDMImpl.class.getName());
 	      put(DBTypeEnum.SQLSERVER2000,DatabaseSqlserver2000Impl.class.getName());
 	      put(DBTypeEnum.SQLSERVER,DatabaseSqlserverImpl.class.getName());
 	      put(DBTypeEnum.POSTGRESQL,DatabasePostgresImpl.class.getName());

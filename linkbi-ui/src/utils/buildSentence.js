@@ -16,9 +16,9 @@ export function buildSqlSentence({ dbType, dataSrc, selectedCalcul, selectedDime
 {
   if(dbType === undefined)
     return
-  if(dbType === 'postgresql')
+  if(dbType === 'postgresql' || dbType === 'greenplum')
     return buildSqlSentence_pg({ dataSrc, selectedCalcul, selectedDimension, orderByStrs, filterStr, limit });
-  else if(dbType === 'oracle')
+  else if(dbType === 'oracle' || dbType === 'dameng')
     return buildSqlSentence_oracle({ dataSrc, selectedCalcul, selectedDimension, orderByStrs, filterStr, limit });
   else
     return buildSqlSentence_default({ dataSrc, selectedCalcul, selectedDimension, orderByStrs, filterStr, limit });
@@ -111,7 +111,7 @@ export function buildSqlSentence_oracle({ dataSrc, selectedCalcul, selectedDimen
   return `SELECT * FROM (SELECT ${fields.join()} FROM (${dataSrc})  ${where || ''} ${groupBy || ''} ${orderBy || ''}) WHERE ROWNUM < ${limit || 200}`
 }
 export function buildSql_Filters({dbType,filters}) {
-  if(dbType === 'postgresql')
+  if(dbType === 'postgresql' || dbType === 'greenplum')
     return filters.map(buildFilterSentence_pg)
   else
     return filters.map(buildFilterSentence_default)
