@@ -104,7 +104,7 @@ export default {
     },
     isShowSchema()
     {
-      return this.dataSource === 'postgresql' || this.dataSource === 'oracle' || this.dataSource === 'dameng' || this.dataSource === 'sqlserver';
+      return this.dataSource === 'postgresql' || this.dataSource === 'greenplum' || this.dataSource === 'oracle' || this.dataSource === 'dameng' || this.dataSource === 'sqlserver';
     },
     // 获取表名
     getTables(type) {

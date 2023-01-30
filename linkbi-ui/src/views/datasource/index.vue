@@ -389,17 +389,17 @@ export default {
     },
     getShowStrategy(datasource) {
       if (datasource === 'hbase') {
-        this.jdbc = this.mongodb = false
+        this.jdbc = this.mongodb = this.doris = false
         this.hbase = true
       } else if (datasource === 'mongodb') {
-        this.jdbc = this.hbase = false
+        this.jdbc = this.hbase = this.doris = false
         this.mongodb = true
         this.temp.jdbcUrl = 'mongodb://[username:password@]host1[:port1][,...hostN[:portN]]][/[database][?options]]'
       } else if (datasource === 'doris') {
         this.doris = this.jdbc = true
         this.hbase = this.mongodb = false
       } else {
-        this.hbase = this.mongodb = false
+        this.hbase = this.mongodb = this.doris = false
         this.jdbc = true
       }
     },
@@ -418,8 +418,6 @@ export default {
         }).then(() => {
             this.fetchData();
             this.msgSuccess("删除成功");
-        }).catch( e => {
-          this.msgError(e);
         })
       // const index = this.list.indexOf(row)
     },
