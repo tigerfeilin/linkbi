@@ -18,10 +18,30 @@
         <Mapper ref="mapper" />
       </div>
       <div v-show="active===4" class="step4">
-        <el-button type="primary" @click="buildJson">1.创建</el-button>
-        <el-button type="primary" @click="handleJobTemplateSelectDrawer">{{ jobTemplate ? jobTemplate : "2.选择模板" }}</el-button>
-        <el-button type="info" @click="handleCopy(inputData,$event)">复制json</el-button>
-        (步骤：创建->选择模板->下一步)
+        <el-form :rules="rules" :inline="true">
+          <el-form-item label="任务名称：">
+            <el-input v-model="jobName" placeholder="任务名称(默认取数据表名)"
+                      style="width: 240px;"
+                      size="small" />
+          </el-form-item>
+          <!--
+          <el-form-item label="所属应用" prop="projectId">
+            <el-select v-model="temp.projectId"
+                       placeholder="请选择所属应用"
+                       clearable
+                       filterable
+                       :filter-method="userFilter"
+                       size="small"
+                       style="width: 240px">
+              <el-option v-for="item in jobProjectList" :key="item.id" :label="item.name" :value="item.id" />
+            </el-select>
+          </el-form-item>-->
+          <el-form-item>
+            <el-button type="primary" @click="buildJson">1.创建json</el-button>
+            <el-button type="primary" @click="handleJobTemplateSelectDrawer">{{ jobTemplate ? jobTemplate : "2.选择模板" }}</el-button>
+            <el-button type="info" @click="handleCopy(inputData,$event)">复制json</el-button>
+          </el-form-item>
+        (步骤：创建json->选择模板->下一步)
         <el-drawer
           ref="jobTemplateSelectDrawer"
           title="选择模板"
@@ -41,10 +61,10 @@
             <el-table-column align="center" label="任务ID" width="80">
               <template slot-scope="scope">{{ scope.row.id }}</template>
             </el-table-column>
-            <el-table-column label="任务描述" align="center">
+            <el-table-column label="任务描述" align="center" >
               <template slot-scope="scope">{{ scope.row.jobDesc }}</template>
             </el-table-column>
-            <el-table-column label="所属应用" align="center" width="120">
+            <el-table-column label="所属应用" align="center" >
               <template slot-scope="scope">{{ scope.row.projectName }}</template>
             </el-table-column>
             <el-table-column label="Cron表达式" align="center">
@@ -56,6 +76,9 @@
           </el-table>
           <pagination v-show="total>0" :total="total" :page.sync="listQuery.current" :limit.sync="listQuery.size" @pagination="fetchData" />
         </el-drawer>
+
+
+        </el-form>
         <div style="margin-bottom: 20px;" />
         <json-editor v-show="active===4" ref="jsonEditor" v-model="configJson" />
       </div>
@@ -70,6 +93,7 @@
 import * as dataxJsonApi from '@/api/datasync/dataxjson'
 import * as jobTemplate from '@/api/datasync/jobtemplate'
 import * as job from '@/api/datasync/jobinfo'
+import * as jobProjectApi from '@/api/project/project'
 import Pagination from '@/components/Pagination'
 import JsonEditor from '@/components/JsonEditor'
 import Reader from './reader'
@@ -90,6 +114,8 @@ export default {
       currentRow: null,
       listLoading: true,
       total: 0,
+      jobName:'',
+      inputData:'',
       listQuery: {
         current: 1,
         size: 10,
@@ -99,6 +125,8 @@ export default {
         executorHandler: '',
         userId: 0
       },
+      jobProjectList: [],
+      allJobProjectList: [],
         sourcedbmsg:{
             sourceId:"",
             sourceSchema:"",
@@ -121,6 +149,9 @@ export default {
         { value: 'BUSYOVER', label: '忙碌转移' }
         // { value: 'SHARDING_BROADCAST', label: '分片广播' }
       ],
+      rules: {
+        projectId: [{ required: false, message: 'projectId is required', trigger: 'change' }]
+      },
       triggerNextTimes: '',
       registerNode: [],
       jobJson: '',
@@ -140,6 +171,7 @@ export default {
         executorHandler: 'executorJobHandler',
         glueType: 'BEAN',
         jobJson: '',
+        projectId: '',
         executorParam: '',
         replaceParam: '',
         jvmParam: '',
@@ -149,6 +181,7 @@ export default {
   },
   created() {
     // this.getJdbcDs()
+    this.getJobProject()
   },
   methods: {
     next() {
@@ -171,6 +204,11 @@ export default {
         }
         if (this.active === 4) {
           this.temp.jobJson = this.configJson
+          //this.temp.projectId = this.projectId
+          if(this.temp.projectId === ''){
+            this.msgWarn("请输入应用名称！");
+            return
+          }
             const jobData = this.temp
             this.$confirm('确定创建该任务?', "警告", {
                 confirmButtonText: "确定",
@@ -191,6 +229,22 @@ export default {
       if (this.active > 1) {
         this.active--
       }
+    },
+    userFilter(query = '') {
+      let arr = this.allJobProjectList.filter((item) => {
+        return item.name.includes(query)
+      })
+      if (arr.length > 50) {
+        this.jobProjectList = arr.slice(0, 50)
+      } else {
+        this.jobProjectList = arr
+      }
+    },
+    getJobProject() {
+      jobProjectApi.getJobProjectList().then(response => {
+        this.allJobProjectList = response.data
+        this.userFilter()
+      })
     },
     // 创建json
     buildJson() {
@@ -303,9 +357,12 @@ export default {
       })
     },
     handleCurrentChange(val) {
+      let loc_projectId = this.temp.projectId
       this.temp = Object.assign({}, val)
+      if(loc_projectId !== undefined && loc_projectId !== null && loc_projectId !== '')
+        this.temp.projectId = loc_projectId
       this.temp.id = undefined
-      this.temp.jobDesc = this.getReaderData().tableName
+      this.temp.jobDesc = this.jobName == '' ? this.getReaderData().tableName : this.jobName;
       this.$refs.jobTemplateSelectDrawer.closeDrawer()
       this.jobTemplate = val.id + '(' + val.jobDesc + ')'
     }

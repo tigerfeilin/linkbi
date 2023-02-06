@@ -136,7 +136,7 @@ export default {
     },
     userFilter(query = '') {
       let arr = this.rAllTbList.filter((item) => {
-        return item.includes(query) || item.includes(query)
+        return item.includes(query)
       })
       if (arr.length > 50) {
         this.rTbList = arr.slice(0, 50)

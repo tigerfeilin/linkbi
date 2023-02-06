@@ -6,6 +6,7 @@
           添加
         </el-button>
       </el-form-item>
+      <right-toolbar @queryTable="fetchData"></right-toolbar>
     </el-form>
     <el-table
       v-loading="listLoading"
@@ -15,7 +16,7 @@
       highlight-current-row
     >
       <el-table-column label="排序" width="50" align="center">
-        <template slot-scope="scope">{{ scope.row.order }}</template>
+        <template slot-scope="scope">{{ scope.row.orderNum }}</template>
       </el-table-column>
       <el-table-column label="名称" width="120" align="center" :show-overflow-tooltip="true">
         <template slot-scope="scope">{{ scope.row.title }}</template>
@@ -51,7 +52,7 @@
           <el-input v-model="temp.title" placeholder="请输入执行器名称" />
         </el-form-item>
         <el-form-item label="排序" prop="prop">
-          <el-input v-model="temp.order" placeholder="执行器序号" />
+          <el-input v-model="temp.orderNum" placeholder="执行器序号" />
         </el-form-item>
         <el-form-item label="注册方式" prop="addressType">
           <el-radio-group v-model="temp.addressType">
@@ -115,14 +116,14 @@ export default {
       rules: {
         appName: [{ required: true, message: 'appName is required', trigger: 'blur' }],
         title: [{ required: true, message: 'title is required', trigger: 'blur' }],
-        order: [{ required: true, message: 'title is required', trigger: 'blur' }],
+        orderNum: [{ required: true, message: 'title is required', trigger: 'blur' }],
         addressType: [{ required: true, message: 'title is required', trigger: 'change' }]
       },
       temp: {
         id: undefined,
         appName: undefined,
         title: undefined,
-        order: undefined,
+        orderNum: undefined,
         addressType: undefined,
         addressList: undefined
       },
@@ -149,7 +150,7 @@ export default {
         id: undefined,
         appName: undefined,
         title: undefined,
-        order: undefined,
+        orderNum: undefined,
         addressType: undefined,
         addressList: undefined
       }

@@ -42,6 +42,7 @@
       <el-table-column label="所属应用" align="center" width="150">
         <template slot-scope="scope">{{ scope.row.projectName }}</template>
       </el-table-column>
+
       <el-table-column label="Cron表达式" align="center" width="150">
         <template slot-scope="scope">
           <span>{{ scope.row.jobCron }}</span>
@@ -170,7 +171,12 @@
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item label="所属应用" prop="projectId">
-              <el-select v-model="temp.projectId" placeholder="所属应用" class="filter-item">
+              <el-select v-model="temp.projectId"
+                         placeholder="所属应用"
+                         clearable
+                         filterable
+                         :filter-method="userFilter"
+                         class="filter-item">
                 <el-option v-for="item in jobProjectList" :key="item.id" :label="item.name" :value="item.id" />
               </el-select>
             </el-form-item>
@@ -317,6 +323,7 @@ export default {
       executorList: '',
       jobIdList: '',
       jobProjectList: '',
+      allJobProjectList: [],
       dataSourceList: '',
       blockStrategies: [
         { value: 'SERIAL_EXECUTION', label: '单机串行' },
@@ -347,7 +354,7 @@ export default {
     this.getExecutor()
     this.getJobIdList()
     this.getJobProject()
-    this.getDataSourceList()
+    //this.getDataSourceList()
   },
 
   methods: {
@@ -357,6 +364,16 @@ export default {
           done()
         })
         .catch(_ => {})
+    },
+    userFilter(query = '') {
+      let arr = this.allJobProjectList.filter((item) => {
+        return item.name.includes(query)
+      })
+      if (arr.length > 50) {
+        this.jobProjectList = arr.slice(0, 50)
+      } else {
+        this.jobProjectList = arr
+      }
     },
     getExecutor() {
       jobTemp.getExecutorList().then(response => {
@@ -372,7 +389,8 @@ export default {
     },
     getJobProject() {
       jobProjectApi.getJobProjectList().then(response => {
-        this.jobProjectList = response.data
+        this.allJobProjectList = response.data
+        this.userFilter()
       })
     },
     getDataSourceList() {
