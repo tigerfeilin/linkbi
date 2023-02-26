@@ -49,14 +49,6 @@ Vue.prototype.msgWarn = function (msg) {
 Vue.prototype.msgInfo = function (msg) {
   this.$message.info(msg);
 }
-/* eslint-disable no-new
-
-axios.get('/admp/project.config.json').then((result) => {
-  Vue.prototype.userConfig = result.data
-  Vue.prototype.metabaseUrl = result.data.metabaseUrl
-}).catch((error) => {
-  console.log('get userConfig error...' + error)
-})*/
 // 全局组件挂载
 Vue.component('Pagination', Pagination)
 Vue.component('RightToolbar', RightToolbar)
@@ -83,11 +75,6 @@ new Vue({
   el: '#app',
   router,
   i18n,
-  data : function(){
-    return {
-        mb_MaxHeight:1100,
-    }
-  },
   store,
   render: h => h(App)
 })

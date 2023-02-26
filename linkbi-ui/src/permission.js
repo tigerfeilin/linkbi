@@ -7,7 +7,7 @@ import { getToken } from '@/utils/auth'
 
 NProgress.configure({ showSpinner: false })
 
-const whiteList = ['/login', '/auth-redirect', '/bind', '/register', '/dashboard']
+const whiteList = ['/login', '/auth-redirect', '/bind', '/register', '/dashboard','/system/config/configKey/']
 
 router.beforeEach((to, from, next) => {
   NProgress.start()
@@ -37,7 +37,7 @@ router.beforeEach((to, from, next) => {
     }
   } else {
     // 没有token
-    if(to.path.startsWith('/dashboard/'))
+    if(to.path.startsWith('/dashboard/') )
     {
       next()
     }

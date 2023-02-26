@@ -72,7 +72,7 @@
     import Mapper from './mapper'
 
 export default {
-  name: 'JsonBuild',
+  name: 'JobBatchBuild',
   components: { Reader, Writer, Pagination, Mapper },
   data() {
     return {

@@ -16,7 +16,13 @@ export function getMenu(menuId) {
     method: 'get'
   })
 }
-
+// 通过path查询菜单详细
+export function getMenuByPath(path) {
+  return request({
+    url: '/system/menu/infopath/' + path,
+    method: 'get'
+  })
+}
 // 查询菜单下拉树结构
 export function treeselect() {
   return request({

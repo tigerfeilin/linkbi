@@ -2,12 +2,12 @@
   <div class="sidebar-logo-container" :class="{'collapse':collapse}" :style="{ backgroundColor: sideTheme === 'theme-dark' ? variables.menuBg : variables.menuLightBg }">
     <transition name="sidebarLogoFade">
       <router-link v-if="collapse" key="collapse" class="sidebar-logo-link" to="/">
-        <img v-if="logo_collapse" :src="logo_collapse" class="sidebar-logo">
+        <img v-if="logo" :src="logo" class="sidebar-logo">
         <!--<h1 v-else class="sidebar-title" :style="{ color: sideTheme === 'theme-dark' ? variables.sidebarTitle : variables.sidebarLightTitle }">{{ title }} </h1>-->
       </router-link>
       <router-link v-else key="expand" class="sidebar-logo-link" to="/">
         <img v-if="logo" :src="logo" class="sidebar-logo">
-        <!--<h1 class="sidebar-title" :style="{ color: sideTheme === 'theme-dark' ? variables.sidebarTitle : variables.sidebarLightTitle }">{{ title }} </h1>-->
+        <h1 class="sidebar-title" :style="{ color: sideTheme === 'theme-dark' ? variables.sidebarTitle : variables.sidebarLightTitle }">{{ title1 }} <br /> {{ title2 }} </h1>
       </router-link>
     </transition>
   </div>
@@ -15,7 +15,6 @@
 
 <script>
 import logoImg from '@/assets/logo/logo.png'
-import logoImg_collapse from '@/assets/logo/logo_collapse.png'
 import variables from '@/assets/styles/variables.scss'
 
 export default {
@@ -36,10 +35,18 @@ export default {
   },
   data() {
     return {
-      title: '数据管理平台',
-      logo: logoImg,
-	    logo_collapse: logoImg_collapse
+      title1: 'AMDATA',
+      title2: '数据管理平台',
+      logo: logoImg
     }
+  },
+  beforeCreate(){
+    this.getConfigKey("sys.app.title1").then(response => {
+      this.title1 = response.msg;
+    });
+    this.getConfigKey("sys.app.title2").then(response => {
+      this.title2 = response.msg;
+    });
   }
 }
 </script>
@@ -54,9 +61,9 @@ export default {
 .sidebar-logo-container {
   position: relative;
   width: 100%;
-  //height: 84px;
-  //line-height: 50px;
-  background: #2b2f3a;
+  height: 50px;
+  line-height: 50px;
+  background: #FF0000;
   text-align: center;
   overflow: hidden;
 
@@ -65,36 +72,39 @@ export default {
     width: 100%;
 
     & .sidebar-logo {
-      width: 100%;
-      //height: 32px;
+      //width: 100%;
+      //vertical-align: middle;
+      //image-rendering: -moz-crisp-edges; /* Firefox */
+      //image-rendering: -o-crisp-edges; /* Opera */
+      //image-rendering: -webkit-optimize-contrast; /*Webkit (non-standard naming) */
+      //image-rendering: crisp-edges;
+      //-ms-interpolation-mode: nearest-neighbor;
+      width: 32px;
+      height: 32px;
       vertical-align: middle;
-      image-rendering: -moz-crisp-edges; /* Firefox */
-      image-rendering: -o-crisp-edges; /* Opera */
-      image-rendering: -webkit-optimize-contrast; /*Webkit (non-standard naming) */
-      image-rendering: crisp-edges;
-      -ms-interpolation-mode: nearest-neighbor;
-      //margin-left: 5px;
-      //margin-top: 10px;
-      //margin-right: 5px;
+      margin-right: 5px;
     }
 
     & .sidebar-title {
-      //display: inline-block;
+      display: inline-block;
       //margin: 0;
-      color: #ffffff;
+      color: #2b2f3a;
+      width: 100px;
+      //height:100%;
       font-weight: 600;
-      //line-height: 50px;
+      line-height: 18px;
       font-size: 16px;
       font-family: Avenir, Helvetica Neue, Arial, Helvetica, sans-serif;
       vertical-align: middle;
+      margin-right: 10px;
     }
   }
 
   &.collapse {
-    height: 50px;
+    //height: 50px;
     .sidebar-logo {
-      width: 90%;
-      height: 90%;
+      width: 60%;
+      height: 60%;
       margin: 0px;
     }
   }

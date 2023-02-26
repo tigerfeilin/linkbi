@@ -164,11 +164,23 @@ export const constantRoutes = [
     ]
   },
   {
+    path: '/cpChart',
+    component: Layout,
+    hidden: true,
+    children: [
+      {
+        path: 'view/:id',
+        component: (resolve) => require(['@/views/cpchart/view/index'], resolve),
+        name: 'CpChart'
+      },
+    ]
+  },
+  {
     path: '/dashboard/:id(\\d+)',
     component: (resolve) => require(['@/views/dataview/dashboard/view'], resolve),
     name: 'sharedbView',
     hidden: true,
-  },
+  }
 ]
 
 export default new Router({

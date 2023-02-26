@@ -4,7 +4,7 @@
       <img src="../assets/logo/logo.png">
     </div>-->
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form">
-      <h3 class="title">数据管理平台</h3>
+      <h3 class="title">{{ title1 }}{{ title2 }}</h3>
       <el-form-item prop="username">
         <el-input v-model="loginForm.username" type="text" auto-complete="off" placeholder="账号">
           <svg-icon slot="prefix" icon-class="user" class="el-input__icon input-icon" />
@@ -51,7 +51,7 @@
     </el-form>
     <!--  底部  -->
     <div class="el-login-footer">
-      <span>Copyright © 2021-2022 AMDATA All Rights Reserved.</span>
+      <span>Copyright © 2022-2023 AMDATA All Rights Reserved.</span>
     </div>
   </div>
 </template>
@@ -65,6 +65,8 @@
         name: "Login",
         data() {
             return {
+                title1: "AMDATA",
+                title2: "数据管理平台",
                 codeUrl: "",
                 cookiePassword: "",
                 loginForm: {
@@ -87,6 +89,14 @@
                 redirect: undefined
             };
         },
+      beforeCreate(){
+        this.getConfigKey("sys.app.title1").then(response => {
+          this.title1 = response.msg;
+        });
+        this.getConfigKey("sys.app.title2").then(response => {
+          this.title2 = response.msg;
+        });
+      },
         watch: {
             $route: {
                 handler: function(route) {

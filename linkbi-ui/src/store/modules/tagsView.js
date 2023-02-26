@@ -63,7 +63,7 @@ const mutations = {
       }
     }
   },
-  
+
   DEL_RIGHT_VIEWS: (state, view) => {
     const index = state.visitedViews.findIndex(v => v.path === view.path)
     if (index === -1) {
@@ -79,6 +79,13 @@ const mutations = {
       }
       return false
     })
+  },
+  EDIT_VISITED_VIEWS: (state, view) => {
+    for (var v in state.visitedViews) {
+      if (state.visitedViews[v].path === view.path) {
+        state.visitedViews[v].title = view.meta.title
+      }
+    }
   }
 }
 
@@ -170,6 +177,12 @@ const actions = {
   delRightTags({ commit }, view) {
     return new Promise(resolve => {
       commit('DEL_RIGHT_VIEWS', view)
+      resolve([...state.visitedViews])
+    })
+  },
+  editVisitedViews({ commit, state }, view) {
+    return new Promise((resolve) => {
+      commit('EDIT_VISITED_VIEWS', view)
       resolve([...state.visitedViews])
     })
   }

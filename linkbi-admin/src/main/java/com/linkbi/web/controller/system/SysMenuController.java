@@ -1,6 +1,8 @@
 package com.linkbi.web.controller.system;
 
 import java.util.List;
+
+import com.linkbi.common.utils.DictUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -62,6 +64,16 @@ public class SysMenuController extends BaseController
     public AjaxResult getInfo(@PathVariable Long menuId)
     {
         return AjaxResult.success(menuService.selectMenuById(menuId));
+    }
+
+    /**
+     * 根据菜单编号获取详细信息
+     */
+    //@PreAuthorize("@ss.hasPermi('system:menu:query')")
+    @GetMapping(value = "/infopath/{path}")
+    public AjaxResult getInfoByPath(@PathVariable String path)
+    {
+        return AjaxResult.success(menuService.selectMenuByPath(path));
     }
 
     /**

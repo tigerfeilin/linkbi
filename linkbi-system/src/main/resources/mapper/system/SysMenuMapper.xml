@@ -153,7 +153,13 @@
 		<include refid="selectMenuVo"/>
 		where menu_id = #{menuId}
 	</select>
-	
+
+	<select id="selectMenuByPath" parameterType="String" resultType="String">
+		select distinct m.menu_name
+		from sys_menu m
+		where m.path = #{path} limit 1
+	</select>
+
 	<select id="hasChildByMenuId" resultType="Integer">
 	    select count(1) from sys_menu where parent_id = #{menuId}  
 	</select>
